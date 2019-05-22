@@ -4,7 +4,7 @@ import numpy as np
 
 
 def plot_values (input_list):
-# for training purposes
+    # for training purposes
 
     labels, ys = zip(*a)
     xs = np.arange(len(labels))
@@ -12,7 +12,8 @@ def plot_values (input_list):
 
     plt.bar(xs, ys, width, align='center')
 
-    plt.xticks(xs, labels) #Replace default x-ticks with xs, then replace xs with labels
+    plt.xticks(xs, labels)
+    # Replace default x-ticks with xs, then replace xs with labels
     plt.yticks(ys)
 
     plt.ylabel('Accuracy')
