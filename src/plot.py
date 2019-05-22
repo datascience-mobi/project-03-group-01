@@ -4,7 +4,7 @@ import numpy as np
 
 
 def plot_values (input_list):
-# for training purposes
+    # for training purposes
 
     labels, ys = zip(*a)
     xs = np.arange(len(labels))
