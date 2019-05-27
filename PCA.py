@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import random as rd
+
+from pandas import DataFrame
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
@@ -30,4 +32,16 @@ plt.bar(x=range(1,len(variation)+1), height=variation)
 plt.ylabel('Percentage of Explained Variance')
 plt.xlabel('Principal Component')
 plt.title('Scree Plot')
+plt.show()
+
+pca_df: DataFrame = pd.DataFrame(pca_data, index=[*wt, *ko], columns=labels)
+# print (pca_df.head())
+plt.scatter(pca_df.PC1, pca_df.PC2)
+plt.title('My PCA Graph')
+plt.xlabel('PC1 - {0}%'.format(variation[0]))
+plt.ylabel('PC2 - {0}%'.format(variation[1]))
+
+for sample in pca_df.index:
+    plt.annotate(sample, (pca_df.PC1.loc[sample], pca_df.PC2.loc[sample]))
+
 plt.show()
