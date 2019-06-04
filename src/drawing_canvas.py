@@ -1,85 +1,69 @@
-import tkinter as tk
-import cv2
-import numpy as np
-
-w = None
-drawn_pixels = None
-
-drawing = False # true if mouse is pressed
-pt1_x, pt1_y = None, None
-coordinates = list()
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.graphics import Color, Line
+from kivy.core.window import Window
+from kivy.config import Config
 
 
-def uniq(input_list):
-  output = list()
-  for x in input_list:
-    if x not in output:
-      output.append(x)
-  return output
+class MyPaintWidget(Widget):
+
+    # coordinates = list() # probably useless since the drawn digit is saved as png
+
+    def __init__(self, **kwargs):
+        """
+        Setting up the key recognition and the drawing widget within the window
+        :param kwargs:
+        """
+        super(MyPaintWidget, self).__init__(**kwargs)
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, key_code, text, modifiers):
+        """
+        Specifying key events
+        :param keyboard:
+        :param key_code:
+        :param text:
+        :param modifiers:
+        :return:
+        """
+        if key_code[1] == 'enter':
+            print(str("Leaving canvas, saving entered digit .."))
+            MyPaintApp.get_running_app().stop()
+            MyPaintWidget.export_to_png(self,"test.png")
+        elif key_code[1] == 'escape':
+            print(str("Resetting canvas .."))
+            self.canvas.clear()
+            MyPaintWidget.coordinates = list()
+        return True
+
+    def on_touch_down(self, touch):
+        with self.canvas:
+            Color(1, 1, 1)
+            touch.ud['line'] = Line(points=(touch.x, touch.y), width=10)
+
+    def on_touch_move(self, touch):
+        touch.ud['line'].points += [touch.x, touch.y]
+        print(touch.x)
+        print(touch.y)
+        # MyPaintWidget.coordinates.append([touch.x, touch.y])
 
 
-def m_move(event) -> None:
-    """
-    Draws circle and saves mouse position to list drawn_pixels
-    :param event: contains cursor position etc.
-    :return: None
-    """
-    global drawn_pixels, w
-    print(event.x, event.y)
-    python_green = "#476042"
-    x1, y1 = (event.x - 2), (event.y - 2)
-    x2, y2 = (event.x + 2), (event.y + 2)
-    w.create_oval(x1, y1, x2, y2, fill=python_green)
-    drawn_pixels.append([event.x, event.y])
+class MyPaintApp(App):
 
-
-def draw_pixel() -> None:
-    """
-    Sets up canvas, binds functions to events, runs canvas
-    :return: None
-    """
-    global w, drawn_pixels
-    root = tk.Tk()
-    root.title("Hello")
-    canvas_width = 28*10
-    canvas_height = 28*10
-
-    drawn_pixels = list()
-
-    w = tk.Canvas(root, width=canvas_width, height=canvas_height)
-    w.pack(expand=tk.YES, fill=tk.BOTH)
-
-    root.bind('<B1-Motion>', m_move)
-    root.bind("<Return>", lambda e: root.destroy())
-    root.mainloop()
-
-
-def line_drawing(event, x, y, flags, param):
-    global pt1_x, pt1_y, drawing
-
-    if event == cv2.EVENT_LBUTTONDOWN:
-        drawing=True
-        pt1_x, pt1_y=x, y
-
-    elif event == cv2.EVENT_MOUSEMOVE:
-        if drawing == True:
-            cv2.line(img, (pt1_x, pt1_y), (x, y), color=(255, 255, 255), thickness=10)
-            if x >= 0 and x <= 280 and y >= 0 and y <= 280:
-                coordinates.append([pt1_x, pt1_y])
-            pt1_x, pt1_y = x, y
-    elif event==cv2.EVENT_LBUTTONUP:
-        drawing=False
-        cv2.line(img, (pt1_x, pt1_y), (x, y), color=(255, 255, 255), thickness=10)
+    def build(self):
+        return MyPaintWidget()
 
 
 if __name__ == '__main__':
-    img = np.zeros((280, 280, 3), np.uint8)
-    cv2.namedWindow('test draw')
-    cv2.setMouseCallback('test draw', line_drawing)
-
-    while (1):
-        cv2.imshow('test draw', img)
-        if cv2.waitKey(1) & 0xFF == 27:
-            break
-    cv2.destroyAllWindows()
-    print(uniq(coordinates))
+    Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
+    Config.set('graphics', 'width', '560')
+    Config.set('graphics', 'height', '560')
+    Config.write()
+    MyPaintApp().run()
+    print("coordinates below")
+    print(MyPaintWidget.coordinates)
