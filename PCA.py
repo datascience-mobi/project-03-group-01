@@ -16,12 +16,13 @@ data = pd.DataFrame (columns = [*wt, *ko], index = genes)
 for gene in data.index:
     data.loc[gene,'wt1':'wt5'] = np.random.poisson(lam=rd.randrange(10,1000), size=5)
     data.loc[gene,'ko1':'ko5'] = np.random.poisson(lam=rd.randrange(10,1000), size=5)
-""" data.loc [genes,'wt1' :'wt5']= np.random.normal(loc=rd.randrange(10,1000), scale=rd.randint(1,100), size=5)
-    data.loc [genes,'ko1':'ko5']= np.random.normal(loc=rd.randrange(10,1000), scale=rd.randint(1,100), size=5)
-print (data.head())
-print(data.shape) """
+# """ data.loc [genes,'wt1' :'wt5']= np.random.normal(loc=rd.randrange(10,1000), scale=rd.randint(1,100), size=5)
+#     data.loc [genes,'ko1':'ko5']= np.random.normal(loc=rd.randrange(10,1000), scale=rd.randint(1,100), size=5)
+# print (data.head())
+# print(data.shape) """
 print (data.head())
 scaled_data = preprocessing.scale(data.T)
+
 pca= PCA()
 pca.fit(scaled_data)
 pca_data=pca.transform(scaled_data)
@@ -45,3 +46,5 @@ for sample in pca_df.index:
     plt.annotate(sample, (pca_df.PCA1.loc[sample], pca_df.PCA2.loc[sample]))
 
 plt.show()
+
+#if __name__ == '__main__':
