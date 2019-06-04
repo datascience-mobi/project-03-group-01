@@ -4,6 +4,7 @@ from kivy.graphics import Color, Line
 from kivy.core.window import Window
 from kivy.config import Config
 from PIL import Image, ImageFilter
+import image_operations
 
 
 def imageprepare(argv):
@@ -27,22 +28,22 @@ def imageprepare(argv):
         newImage.paste(img, (4, wtop))  # paste resized image on white canvas
     else:
         # Height is bigger. Heigth becomes 20 pixels.
-        nwidth = int(round((20.0 / height * width), 0))  # resize width according to ratio height
+        nwidth = int(round((28.0 / height * width), 0))  # resize width according to ratio height
         if (nwidth == 0):  # rare case but minimum is 1 pixel
             nwidth = 1
             # resize and sharpen
-        img = im.resize((nwidth, 20), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        img = im.resize((nwidth, 28), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
         wleft = int(round(((28 - nwidth) / 2), 0))  # caculate vertical pozition
-        newImage.paste(img, (wleft, 4))  # paste resized image on white canvas
+        newImage.paste(img, (wleft, 0))  # paste resized image on white canvas
 
     # newImage.save("sample.png
 
     tv = list(newImage.getdata())  # get pixel values
 
     # normalize pixels to 0 and 1. 0 is pure white, 1 is pure black.
-    tva = [(255 - x) * 1.0 / 255.0 for x in tv]
-    print(tva)
-    return tva
+    #tva = [(255 - x) * 1.0 for x in tv]
+    print(tv)
+    return tv
 
 
 class MyPaintWidget(Widget):
@@ -84,7 +85,7 @@ class MyPaintWidget(Widget):
     def on_touch_down(self, touch):
         with self.canvas:
             Color(1, 1, 1)
-            touch.ud['line'] = Line(points=(touch.x, touch.y), width=10)
+            touch.ud['line'] = Line(points=(touch.x, touch.y), width=35)
 
     def on_touch_move(self, touch):
         touch.ud['line'].points += [touch.x, touch.y]
@@ -99,15 +100,31 @@ class MyPaintApp(App):
         return MyPaintWidget()
 
 
-if __name__ == '__main__':
-
-    # Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
-    # Config.set('graphics', 'width', '560')
-    # Config.set('graphics', 'height', '560')
-    # Config.write()
-    # MyPaintApp().run()
+def drawn_image() -> list:
+    Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
+    Config.set('graphics', 'width', '560')
+    Config.set('graphics', 'height', '560')
+    Config.write()
+    MyPaintApp().run()
     # print("coordinates below")
     # print(MyPaintWidget.coordinates)
-    x = imageprepare('C:\\Users\\Lukas Voos\\Downloads\\ImageToMNIST\\image.png')  # file path here
+    x = imageprepare('test.png')  # file path here
+    image_operations.draw(x)
+    image_operations.save("mnist.png",x)
+    print(len(x))  # mnist IMAGES are 28x28=784 pixels
+    return x
+
+if __name__ == '__main__':
+
+    Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
+    Config.set('graphics', 'width', '560')
+    Config.set('graphics', 'height', '560')
+    Config.write()
+    MyPaintApp().run()
+    # print("coordinates below")
+    # print(MyPaintWidget.coordinates)
+    x = imageprepare('test.png')  # file path here
+    image_operations.draw(x)
+    image_operations.save("mnist.png",x)
     print(len(x))  # mnist IMAGES are 28x28=784 pixels
 
