@@ -76,12 +76,14 @@ class CsvImage:
     #label = None # TODO: static variables?
     #image = list()
 
-    def __init__(self, input_image):
+    def __init__(self, input_image, is_list=False):
         """
         Initializes CsvImage object, chops of first value (value) as int, saves rest into pixel list
         :param input_image: string of label and intensities, separated by ","
         """
-        values = input_image.split(",")
+        values = input_image
+        if not is_list:
+            values = input_image.split(",")
         self.label = int(values[0])
         values.pop(0)
         self.image = list()
