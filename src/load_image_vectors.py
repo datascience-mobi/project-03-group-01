@@ -6,10 +6,9 @@ def load_gz(path) -> list:
     """
     Loads bytes from input .csv.gz file (single line)
     :param path: path to input file (.gz)
-    :return: list of images (label + intensity values) as string, separated by ","
+    :return: list of CsvImage Objects
     """
     input_file = gzip.open(path, 'rb')
-    # data = None # TODO: try does not create a new scope?
     try:
         data = input_file.read()
     finally:
@@ -40,7 +39,7 @@ def load_csv(path) -> list:
     """
     Loads strings from input .csv (multiple lines)
     :param path: path to .csv
-    :return:
+    :return: list of CsvImage Objects
     """
     data_list = list()  # type: List[str]
 
@@ -75,7 +74,6 @@ def get_image_object_list(data_list):
 
 def get_pixel_list(strings) -> list:
     values = strings.split(",")
-    #self.label = int(values[0])
     values.pop(0)
     image = list()
     for pixel in values:
