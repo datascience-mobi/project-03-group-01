@@ -16,36 +16,42 @@ def set_success_rate(prediction, test_image) -> None:
     return None
 
 
-def get_success_rate ():
+def get_success_rate():
     global tests_count, tests_success
     success = float(tests_success)/float(tests_count)
     return round(success, 4)
 
 
 if __name__ == '__main__':
-    k = 20  # number of nearest neighbors to check
+
+    # number of nearest neighbors to check
+    k = 20
+
+    # loads training vectors for detection of drawn digit
     training_gz = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
     training_list = load_image_vectors.get_image_object_list(training_gz)
     print("Successfully loaded training list")
     # test_gz = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     # test_list = load_image_vectors.get_image_object_list(test_gz)
     # print("Successfully loaded test list")
-    #
-    # print(test_list[1].image)
-    image_operations.draw(training_list[6].image)
+
+    # show reference image for drawing
+    image_operations.draw(training_list[6].image)  # 1
+
+    # optionally save reference image for later inspection
     # image_operations.save('../fname.png', test_list[1].image)
+
+    # get drawn image, adjusted for mnist
     test_vector = drawing_canvas.drawn_image()
-    test_vector.insert(0,-1)
+
+    # insert label to fit test_vector for CsvImage class
+    test_vector.insert(0, -1)
+
+    # Creates CsvImage object for drawn test image
     test = load_image_vectors.CsvImage(test_vector, is_list=True)
+
+    # perform KNN
     sorted_distances = knn.get_sorted_distances(test, training_list)
     # print("Successfully calculated distance of one test image to all training images")
-    predicted_digit = knn.knn_distance_prediction(sorted_distances,k)
+    predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
     print(predicted_digit)
-
-    # training_csv = load_image_vectors.load_csv('../data/mnist_train.csv') # Alternative to load_gz
-    #for i in range (10):
-    #    sorted_distances = knn.get_sorted_distances(test_list[i], training_list)
-    #    # print("Successfully calculated distance of one test image to all training images")
-    #    predicted_digit = knn.knn_distance_prediction(sorted_distances,k)
-    #    set_success_rate(predicted_digit, test_list[i])
-    #print("Success rate: " + str(get_success_rate()))
