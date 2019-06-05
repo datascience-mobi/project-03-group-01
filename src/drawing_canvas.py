@@ -7,53 +7,56 @@ from PIL import Image, ImageFilter
 import image_operations
 
 
-def imageprepare(argv):
+def image_prepare(path) -> list:
     """
-    This function returns the pixel values.
-    The imput is a png file location.
+    transforms input image as mnist compatible intensity list
+    :param path: image path
+    :return: transformed image as list
     """
-    im = Image.open(argv).convert('L')
+    # open input image from path
+    im = Image.open(path).convert('L')
     width = float(im.size[0])
     height = float(im.size[1])
-    newImage = Image.new('L', (28, 28), (255))  # creates white canvas of 28x28 pixels
 
-    if width > height:  # check which dimension is bigger
+    # creates white canvas of 28x28 pixels
+    new_image = Image.new('L', (28, 28), 255)
+
+    # check which dimension is bigger, redundant as long as canvas width = height -> Not tested
+    if width > height:
         # Width is bigger. Width becomes 20 pixels.
-        nheight = int(round((20.0 / width * height), 0))  # resize height according to ratio width
-        if (nheight == 0):  # rare case but minimum is 1 pixel
-            nheight = 1
-            # resize and sharpen
-        img = im.resize((20, nheight), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
-        wtop = int(round(((28 - nheight) / 2), 0))  # calculate horizontal position
-        newImage.paste(img, (4, wtop))  # paste resized image on white canvas
+        new_height = int(round((20.0 / width * height), 0))  # resize height according to ratio width
+        if new_height == 0:  # rare case but minimum is 1 pixel
+            new_height = 1
+
+        # resize and sharpen
+        img = im.resize((20, new_height), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        w_top = int(round(((28 - new_height) / 2), 0))  # calculate horizontal position
+        new_image.paste(img, (4, w_top))  # paste resized image on white canvas
     else:
-        # Height is bigger. Heigth becomes 20 pixels.
-        nwidth = int(round((28.0 / height * width), 0))  # resize width according to ratio height
-        if (nwidth == 0):  # rare case but minimum is 1 pixel
-            nwidth = 1
+        # TODO mnist image should have black margin instead of none?
+        # Height is bigger. height becomes 20 pixels. <- changed to 28 to remove white margin
+        new_width = int(round((28.0 / height * width), 0))  # resize width according to ratio height
+        if new_width == 0:  # rare case but minimum is 1 pixel
+            new_width = 1
             # resize and sharpen
-        img = im.resize((nwidth, 28), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
-        wleft = int(round(((28 - nwidth) / 2), 0))  # caculate vertical pozition
-        newImage.paste(img, (wleft, 0))  # paste resized image on white canvas
+        img = im.resize((new_width, 28), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        w_left = int(round(((28 - new_width) / 2), 0))  # calculate vertical position TODO probably shifts pixels?
+        new_image.paste(img, (w_left, 0))  # paste resized image on white canvas
 
-    # newImage.save("sample.png
+    # save mnist styled image to list
+    mnist_image = list(new_image.getdata())  # get pixel values
 
-    tv = list(newImage.getdata())  # get pixel values
-
-    # normalize pixels to 0 and 1. 0 is pure white, 1 is pure black.
-    #tva = [(255 - x) * 1.0 for x in tv]
-    print(tv)
-    return tv
+    print(mnist_image)
+    return mnist_image
 
 
+# Canvas widget for drawing window
 class MyPaintWidget(Widget):
-
-    # coordinates = list() # probably useless since the drawn digit is saved as png
 
     def __init__(self, **kwargs):
         """
         Setting up the key recognition and the drawing widget within the window
-        :param kwargs:
+        :param kwargs: TODO probably has to be kept because it's a prebuild kivy function
         """
         super(MyPaintWidget, self).__init__(**kwargs)
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
@@ -63,37 +66,44 @@ class MyPaintWidget(Widget):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
 
-    def _on_keyboard_down(self, keyboard, key_code, text, modifiers):
+    def _on_keyboard_down(self, keyboard, key_code, text, modifiers) -> bool:
         """
         Specifying key events
-        :param keyboard:
-        :param key_code:
-        :param text:
-        :param modifiers:
-        :return:
+        :param keyboard: not used TODO probably has to be kept because it's a prebuild kivy function
+        :param key_code: which key is pressed
+        :param text: not used TODO probably has to be kept because it's a prebuild kivy function
+        :param modifiers: not used TODO probably has to be kept because it's a prebuild kivy function
+        :return: True if no error occured
         """
-        if key_code[1] == 'enter':
+        if key_code[1] == 'enter':  # Apply drawn canvas on enter key pressed
             print(str("Leaving canvas, saving entered digit .."))
             MyPaintApp.get_running_app().stop()
-            MyPaintWidget.export_to_png(self,"test.png")
-        elif key_code[1] == 'escape':
+            MyPaintWidget.export_to_png(self, "test.png")
+        elif key_code[1] == 'escape':  # Reset Canvas to restart drawing on escape key pressed
             print(str("Resetting canvas .."))
             self.canvas.clear()
-            MyPaintWidget.coordinates = list()
         return True
 
-    def on_touch_down(self, touch):
+    def on_touch_down(self, touch) -> None:
+        """
+        Begins line when left mouse button is first pressed
+        :param touch: contains cursor coordinates amongst others
+        :return: None
+        """
         with self.canvas:
             Color(1, 1, 1)
             touch.ud['line'] = Line(points=(touch.x, touch.y), width=35)
 
-    def on_touch_move(self, touch):
+    def on_touch_move(self, touch) -> None:
+        """
+        Attaches coordinates to line when pressed mouse is moved
+        :param touch: contains cursor coordinates amongst others
+        :return: None
+        """
         touch.ud['line'].points += [touch.x, touch.y]
-        print(touch.x)
-        print(touch.y)
-        # MyPaintWidget.coordinates.append([touch.x, touch.y])
 
 
+# TODO probably creates the canvas window
 class MyPaintApp(App):
 
     def build(self):
@@ -101,30 +111,31 @@ class MyPaintApp(App):
 
 
 def drawn_image() -> list:
+    """
+    Initializes draw_canvas
+    :return: mnist compatible drawn image
+    """
+    # Sets window parameters
     Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
     Config.set('graphics', 'width', '560')
     Config.set('graphics', 'height', '560')
     Config.write()
+
+    # Runs drawing window
     MyPaintApp().run()
-    # print("coordinates below")
-    # print(MyPaintWidget.coordinates)
-    x = imageprepare('test.png')  # file path here
+
+    # Transform saved image to mnist style image
+    x = image_prepare('test.png')  # path must fit path in MyPaintWidget.on_keyboard_down
+
+    # show and save mnist style input image
     image_operations.draw(x)
-    image_operations.save("mnist.png",x)
+    image_operations.save("mnist.png", x)
+
+    # Control: does mnist style image actually fit mnist size?
     print(len(x))  # mnist IMAGES are 28x28=784 pixels
     return x
 
+
 if __name__ == '__main__':
-
-    Config.set('graphics', 'resizable', 'false')  # 0 being off 1 being on as in true/false
-    Config.set('graphics', 'width', '560')
-    Config.set('graphics', 'height', '560')
-    Config.write()
-    MyPaintApp().run()
-    # print("coordinates below")
-    # print(MyPaintWidget.coordinates)
-    x = imageprepare('test.png')  # file path here
-    image_operations.draw(x)
-    image_operations.save("mnist.png",x)
-    print(len(x))  # mnist IMAGES are 28x28=784 pixels
-
+    # For debugging purposes -> directly call drawing functions without further recognition
+    y = drawn_image()
