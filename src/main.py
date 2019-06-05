@@ -32,6 +32,7 @@ if __name__ == '__main__':
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
+    print("PCA finished successfully")
 
     # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     for i in range(len(training_lists[0])):
@@ -42,6 +43,7 @@ if __name__ == '__main__':
         # print(len(test_lists[0][i].image))
         test_lists[0][i].image = reduced_images[1][i]
         # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
+    print("Replaced images by reduced images")
 
     # perform KNN for dimension reduced images (one test image)
     sorted_distances = knn.get_sorted_distances(test_lists[0][5], training_lists[0])
