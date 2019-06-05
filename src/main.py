@@ -1,4 +1,7 @@
-import knn, pca, image_operations, load_image_vectors
+import src.knn as knn
+import src.pca as pca
+# import src.image_operations as image_operations # TODO draw reduced images -> revert back to 784 dimensions
+import src.load_image_vectors as load_image_vectors
 
 tests_count = 0
 tests_success = 0
@@ -12,14 +15,17 @@ def set_success_rate(prediction, test_image) -> None:
     return None
 
 
-def get_success_rate ():
+def get_success_rate():
     global tests_count, tests_success
     success = float(tests_success)/float(tests_count)
     return round(success, 4)
 
 
 if __name__ == '__main__':
-    k = 20  # number of nearest neighbors to check
+    # number of nearest neighbors to check
+    k = 20
+
+    # load training and test images
     training_gz = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
     training_lists = load_image_vectors.get_image_object_list(training_gz)
     print("Successfully loaded training list")
@@ -27,23 +33,21 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.get_image_object_list(test_gz)
     print("Successfully loaded test list")
 
-    reduced_stuff = pca.prepare_data(training_lists[1], test_lists[1])
+    # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
+    reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
+
+    # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     for i in range(len(training_lists[0])):
-        print(len(training_lists[0][i].image))
-        training_lists[0][i].image = reduced_stuff[0][i]
-        print(len(training_lists[0][i].image))
+        # print(len(training_lists[0][i].image)) # for debugging
+        training_lists[0][i].image = reduced_images[0][i]
+        # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
     for i in range(len(test_lists[0])):
-        print(len(test_lists[0][i].image))
-        test_lists[0][i].image = reduced_stuff[1][i]
-        print(len(test_lists[0][i].image))
+        # print(len(test_lists[0][i].image))
+        test_lists[0][i].image = reduced_images[1][i]
+        # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
 
-    # reduced_stuff[0] is train_list, [1] is test_list without digits
-
-    # training_csv = load_image_vectors.load_csv('../data/mnist_train.csv') # Alternative to load_gz
-    # for i in range (10):
+    # perform KNN for dimension reduced images (one test image)
     sorted_distances = knn.get_sorted_distances(test_lists[0][5], training_lists[0])
     # print("Successfully calculated distance of one test image to all training images")
-    predicted_digit = knn.knn_distance_prediction(sorted_distances,k)
+    predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
     print(predicted_digit, test_lists[0][5].label)
-    #     set_success_rate(predicted_digit, test_list[i])
-    # print("Success rate: " + str(get_success_rate()))
