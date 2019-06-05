@@ -1,6 +1,5 @@
 import src.knn as knn
 import src.pca as pca
-# import src.image_operations as image_operations # TODO draw reduced images -> revert back to 784 dimensions
 import src.load_image_vectors as load_image_vectors
 
 tests_count = 0
@@ -26,11 +25,9 @@ if __name__ == '__main__':
     k = 20
 
     # load training and test images
-    training_gz = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-    training_lists = load_image_vectors.get_image_object_list(training_gz)
+    training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
     print("Successfully loaded training list")
-    test_gz = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-    test_lists = load_image_vectors.get_image_object_list(test_gz)
+    test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
@@ -48,6 +45,6 @@ if __name__ == '__main__':
 
     # perform KNN for dimension reduced images (one test image)
     sorted_distances = knn.get_sorted_distances(test_lists[0][5], training_lists[0])
-    # print("Successfully calculated distance of one test image to all training images")
+    print("Successfully calculated distance of one test image to all training images")
     predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
     print(predicted_digit, test_lists[0][5].label)
