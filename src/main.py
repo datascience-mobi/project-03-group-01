@@ -46,7 +46,5 @@ if __name__ == '__main__':
     print("Replaced images by reduced images")
 
     # perform KNN for dimension reduced images (one test image)
-    sorted_distances = knn.get_sorted_distances(test_lists[0][5], training_lists[0])
-    print("Successfully calculated distance of one test image to all training images")
-    predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
-    print(predicted_digit, test_lists[0][5].label)
+    predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
+    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
