@@ -21,5 +21,11 @@ def read_idx(filename):
 
 raw_train = read_idx("../data_for_sklearn_KNN/train-images.idx3-ubyte")
 # print(raw_train)
-# print(raw_train.shape)
-raw_data = np.reshape(raw_train,(60000,28*28))
+# print(raw_train.shape
+train_data = np.reshape(raw_train,(60000,28*28))
+train_label= read_idx("../data_for_sklearn_KNN/train-labels.idx1-ubyte")
+# print(train_data.shape)
+test_label = read_idx("../data_for_sklearn_KNN/t10k-labels.idx1-ubyte")
+raw_test = read_idx("../data_for_sklearn_KNN/t10k-images.idx3-ubyte")
+test_data = np.reshape (raw_test, (60000, 28*28))
+
