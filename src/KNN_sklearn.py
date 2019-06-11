@@ -27,5 +27,10 @@ train_label= read_idx("../data_for_sklearn_KNN/train-labels.idx1-ubyte")
 # print(train_data.shape)
 test_label = read_idx("../data_for_sklearn_KNN/t10k-labels.idx1-ubyte")
 raw_test = read_idx("../data_for_sklearn_KNN/t10k-images.idx3-ubyte")
-test_data = np.reshape (raw_test, (60000, 28*28))
+test_data = np.reshape (raw_test, (10000, 28*28))
+knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_data, train_label)
+print(knn.predict(test_data[:10]))
+
+
+
 
