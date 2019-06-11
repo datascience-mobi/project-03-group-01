@@ -1,6 +1,7 @@
 import src.knn as knn
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
+import pickle
 
 tests_count = 0
 tests_success = 0
@@ -20,15 +21,38 @@ def get_success_rate():
     return round(success, 4)
 
 
+def save_pickles(list_name, path):
+    # PIK = "pickle.dat"
+    #
+    # data = ["A", "b", "C", "d"]
+    with open(path, "wb") as f:
+        pickle.dump(list_name, f)
+
+
+def load_pickles(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
+
 if __name__ == '__main__':
     # number of nearest neighbors to check
     k = 20
 
-    # load training and test images
-    training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-    print("Successfully loaded training list")
-    test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-    print("Successfully loaded test list")
+    # # TODO lists are currently a tuple of CsvImage Objects and the pure lists
+    # # load training and test images - only necessary once combined with saving as pickle
+    # training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
+    # print("Successfully loaded training list")
+    # test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
+    # print("Successfully loaded test list")
+
+    # # Save created CsvImage lists in pickle files
+    # save_pickles(training_lists, "../data/training.dat")
+    # save_pickles(test_lists, "../data/test.dat")
+
+    # Open CsvImage lists from pickle files - lowers loading time by factor 10
+    training_lists = load_pickles("../data/training.dat")
+    test_lists = load_pickles("../data/test.dat")
+    print("Successfully loaded images from pickle files")
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
