@@ -53,22 +53,36 @@ if __name__ == '__main__':
     training_lists = load_pickles("../data/training.dat")
     test_lists = load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
+    #
+    # # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
+    # reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
+    # print("PCA finished successfully")
+    #
+    # # Replace unreduced CsvImage vectors by reduced ones, for training and test images
+    # for i in range(len(training_lists[0])):
+    #     # print(len(training_lists[0][i].image)) # for debugging
+    #     training_lists[0][i].image = reduced_images[0][i]
+    #     # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
+    # for i in range(len(test_lists[0])):
+    #     # print(len(test_lists[0][i].image))
+    #     test_lists[0][i].image = reduced_images[1][i]
+    #     # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
+    # print("Replaced images by reduced images")
 
-    # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
-    print("PCA finished successfully")
+    # # Save created CsvImage lists in pickle files
+    # save_pickles(training_lists, "../data/red_training.dat")
+    # save_pickles(test_lists, "../data/red_test.dat")
 
-    # Replace unreduced CsvImage vectors by reduced ones, for training and test images
-    for i in range(len(training_lists[0])):
-        # print(len(training_lists[0][i].image)) # for debugging
-        training_lists[0][i].image = reduced_images[0][i]
-        # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
-    for i in range(len(test_lists[0])):
-        # print(len(test_lists[0][i].image))
-        test_lists[0][i].image = reduced_images[1][i]
-        # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
-    print("Replaced images by reduced images")
+    # # Open CsvImage lists from pickle files - lowers loading time by factor 10
+    # training_lists = load_pickles("../data/red_training.dat")
+    # test_lists = load_pickles("../data/red_test.dat")
+    # print("Successfully loaded images from pickle files")
 
-    # perform KNN for dimension reduced images (one test image)
-    predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
-    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
+    # pca.increase_dimensions(test_lists[1])
+    x = pca.reduce_dimensions(test_lists[1], training_lists[1])
+    #
+    #
+    # # perform KNN for dimension reduced images (one test image)
+    # predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
+    # print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
+
