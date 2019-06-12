@@ -21,15 +21,25 @@ def get_success_rate():
     return round(success, 4)
 
 
-def save_pickles(list_name, path):
-    # PIK = "pickle.dat"
-    #
-    # data = ["A", "b", "C", "d"]
+def save_pickles(list_name, path) -> None:
+    """
+    saves input object (here: tuple containing object list and integer list
+    :param list_name: list to be stored
+    :param path: where to save
+    :return: None
+    """
+    # open file and save to it
     with open(path, "wb") as f:
         pickle.dump(list_name, f)
 
 
-def load_pickles(path):
+def load_pickles(path) -> object:
+    """
+    loads stored pickles (here: object lists) from file
+    :param path: path to pickle file
+    :return: decompressed pickle / object list
+    """
+    # open file and return obtained content
     with open(path, "rb") as f:
         return pickle.load(f)
 
@@ -38,7 +48,7 @@ if __name__ == '__main__':
     # number of nearest neighbors to check
     k = 20
 
-    # # TODO lists are currently a tuple of CsvImage Objects and the pure lists
+    # # TODO lists are currently a tuple of CsvImage Objects and the pure integer lists
     # # load training and test images - only necessary once combined with saving as pickle
     # training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
     # print("Successfully loaded training list")
@@ -54,7 +64,7 @@ if __name__ == '__main__':
     test_lists = load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
 
-    # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
+    # Get reduced training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
     print("PCA finished successfully")
 
