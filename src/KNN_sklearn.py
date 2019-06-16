@@ -17,9 +17,9 @@ import struct
 
 
 # noinspection PyUnresolvedReferences
-def knn_sk(test_lists, train_lists):
-    list(test_lists)
-    list(train_lists)
+def knn_sk(test_tuple, train_tuple):
+    test_lists = list(test_tuple)
+    train_lists = list(train_tuple)
     train_labels: List[Any] = list()
     test_prediction =list ()
     for i in range(len(train_lists)):
@@ -28,11 +28,11 @@ def knn_sk(test_lists, train_lists):
         del train_lists[i][0]
     #print (train_lists[:10][:10])
     # print (train_labels[:10])
-    # knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_lists, train_labels)
+    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_lists, train_labels)
     # print(knn.predict(test_list[:10]))
-    #test_prediction = knn.predict(test_lists)
-    # return test_prediction
-    return train_labels
+    test_prediction = knn.predict(test_lists)
+    return test_prediction
+    # return type (train_labels), type (test_lists), type (train_lists)
 
 
 "for test purposes"
@@ -51,9 +51,8 @@ print("Successfully loaded test list")
 # print(dim(test_lists))
 
 
-#print (type(test_lists))
-print(knn_sk(test_lists, training_lists)[:10])
-
+print(knn_sk(test_lists, training_lists))
+#print (type(training_lists))
 #def read_idx(filename):
 
 
