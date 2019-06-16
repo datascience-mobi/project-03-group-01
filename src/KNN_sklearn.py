@@ -1,37 +1,25 @@
-from typing import List, Any
-
-import numpy as np
-import pandas as pd
-import scipy
-import matplotlib.pyplot as plt
 # from pylab import reParams
-import urllib
-import sklearn
 import src.load_image_vectors as load_image_vectors
-from sklearn.neighbors import KNeighborsClassifier
+
+
 # from sklearn.neighbors import
-from sklearn import preprocessing
-from sklearn.cross_validation import train_test_split
-from sklearn import metrics
-import struct
 
 
 # noinspection PyUnresolvedReferences
 def knn_sk(test_tuple, train_tuple):
     test_lists = list(test_tuple)
     train_lists = list(train_tuple)
-    train_labels: List[Any] = list()
+    train_labels = list()
     test_prediction =list ()
     for i in range(len(train_lists)):
-
-        train_labels.append(train_lists[i][0])
+        train_labels += (train_lists[i][0])
         del train_lists[i][0]
     #print (train_lists[:10][:10])
     # print (train_labels[:10])
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_lists, train_labels)
+    # knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_lists, train_labels)
     # print(knn.predict(test_list[:10]))
-    test_prediction = knn.predict(test_lists)
-    return test_prediction
+    # test_prediction = knn.predict(test_lists)
+    return train_labels
     # return type (train_labels), type (test_lists), type (train_lists)
 
 
