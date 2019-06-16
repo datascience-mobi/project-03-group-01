@@ -4,9 +4,11 @@ import src.image_operations as image_operations
 import numpy
 
 
+# Does not work with a specified variance value, only produces noise without specified variance
+# to execute, de-comment and run (only) lines 83 - 89 in main.py
 def increase_dimensions(pixellist):
     pixellist = numpy.array(pixellist)
-    pca = PCA()
+    pca = PCA(n_components=12)
     pca.fit(pixellist)
     approximation = pca.inverse_transform(pixellist)
     # red = approximation.tolist()
@@ -15,6 +17,9 @@ def increase_dimensions(pixellist):
     image_operations.draw(approximation[0])
 
 
+# performs pca and inverts it. draws 3 images: before pca, after inversion, after inversion with scaling values to 0-255
+# digits (subjectively) recognizable with ~ 30%+ variance, but digit partly indistinguishable from background
+# to execute, run lines 55 - 63 in main.py
 def reduce_dimensions(train_list, test_list) -> tuple:
     """
     Performs pca
@@ -22,54 +27,9 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     :param test_list: test list
     :return: reduced input lists as tuple
     """
-    # # Scaler object for preprocessing input lists TODO mean normalizes?
-    # scaler = preprocessing.StandardScaler()
-    #
-    # # Fit on training set only.
-    # scaler.fit(train_list)
-    #
-    # # Apply transform to both the training set and the test set.
-    # train_list = scaler.transform(train_list)
-    # test_list = scaler.transform(test_list)
-    #
-    # # performs the dimension reduction itself
-    # pca = PCA(.95)  # how much variance to keep
-    #
-    # # # Normalize around mean again
-    # # pca.fit(train_list)
-    # # print(pca.n_components_)
-    # # train_list = pca.transform(train_list)
-    # # test_list = pca.transform(test_list)
-    #
-    # test_list = pca.fit_transform(test_list)
-    # # Lower dimension data is 5000x353 instead of 5000x1024
-    # # lower_dimension_data.shape
-    #
-    # test_list.shape
-    # # Project lower dimension data onto original features
-    # approximation = pca.inverse_transform(test_list)
-    # # Approximation is 5000x1024
-    # approximation.shape
-    # # Reshape approximation and X_norm to 5000x32x32 to display images
-    # #approximation = approximation.reshape(-1, 32, 32)
-    # #X_norm = X_norm.reshape(-1, 32, 32)
-    #
-    # #red = pca.inverse_transform(test_list)
-    # for i in range(10):
-    #     image_operations.draw(approximation[i])
+    test_index = 3
 
-    # For debugging: how many dimensions are kept
-    # for i in range(5):
-    #     print(len(train_list[i]))
-
-    # For debugging: was every image kept?
-    # print(len(train_list))
-    # print(len(test_list))
-
-    # return both lists separately as tuple
-
-    # Should this variable be X_train instead of Xtrain?
-    #X_train = numpy.random.randn(100, 50)
+    image_operations.draw(test_list[test_index])
 
     scaler = preprocessing.StandardScaler()
 
@@ -80,29 +40,60 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     train_list = scaler.transform(train_list)
     test_list = scaler.transform(test_list)
 
+    # Create instance of pca and fit it only to the training images
+    pca = PCA(.3)
+    pca.fit(train_list)
 
-    X_train = train_list
-    X_test = test_list
-    pca = PCA(0.95)
-    pca.fit(X_train)
+    # Apply pca to both image lists
+    train_pca = pca.transform(train_list)
+    test_pca = pca.transform(test_list)
 
-    # U, S, VT = np.linalg.svd(X_train - X_train.mean(0))
+    # Reconstruct one test image from its reduced form
+    test_inverse = pca.inverse_transform(test_pca)
+    test_inverse = pca.inverse_transform(test_pca)
+
+    # Draw image as it was created by inverse_transform
+    image_operations.draw(test_inverse[test_index])
+
+    # For debug: min and max values of reconstructed image
+    print(min(test_inverse[test_index]))
+    print("--")
+    print(max(test_inverse[test_index]))
+
+    new_image = test_inverse[test_index]
+    # Scale reconstructed image values to a range from 0 to 255
+    new_image = numpy.interp(new_image, (new_image.min(), new_image.max()), (0, 255))
+
+    # For debug: min and max values after scaling
+    print(min(new_image))
+    print("--")
+    print(max(new_image))
+
+    # Draw scaled image
+    image_operations.draw(new_image)
+
+    # # TODO perform pca for 100% variance, remove k least variant components and revert pca
+    # pca = PCA(n_components=50)
+    # test_pca = numpy.delete(test_pca, 50, 1)
     #
-    # assert_array_almost_equal(VT[:30], pca.components_)
+    # # Reconstruct one test image from its reduced form
+    # test_inverse = pca.inverse_transform(test_pca)
+    #
+    # # Draw image as it was created by inverse_transform
+    # image_operations.draw(test_inverse[test_index])
+    #
+    # # For debug: min and max values of reconstructed image
+    # print(min(test_inverse[test_index]))
+    # print("--")
+    # print(max(test_inverse[test_index]))
+    #
+    # new_image = test_inverse[test_index]
+    # # Scale reconstructed image values to a range from 0 to 255
+    # new_image = numpy.interp(new_image, (new_image.min(), new_image.max()), (0, 255))
+    #
+    # # For debug: min and max values after scaling
+    # print(min(new_image))
+    # print("--")
+    # print(max(new_image))
 
-    X_train_pca = pca.transform(X_train)
-    X_test_pca = pca.transform(X_test)
-
-    # X_train_pca2 = (X_train - pca.mean_).dot(pca.components_.T)
-
-    # assert_array_almost_equal(X_train_pca, X_train_pca2)
-
-    # pca.ited in
-
-    X_projected = pca.inverse_transform(X_train_pca)
-    # X_projected2 = X_train_pca.dot(pca.components_) + pca.mean_
-
-    # assert_array_almost_equal(X_projected, X_projected2)
-    image_operations.draw(X_projected[0])
-
-    return train_list, test_list
+    return train_pca, test_pca
