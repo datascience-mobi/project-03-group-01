@@ -12,7 +12,7 @@ def knn_sk(test_tuple, train_tuple):
     train_labels = list()
     test_prediction =list ()
     for i in range(len(train_lists)):
-        train_labels += (train_lists[i][0])
+        train_labels.append(train_lists[i][0])
         del train_lists[i][0]
     #print (train_lists[:10][:10])
     # print (train_labels[:10])
