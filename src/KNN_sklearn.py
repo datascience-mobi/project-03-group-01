@@ -1,3 +1,5 @@
+from typing import List, Any
+
 import numpy as np
 import pandas as pd
 import scipy
@@ -16,27 +18,45 @@ import struct
 
 # noinspection PyUnresolvedReferences
 def knn_sk(test_lists, train_lists):
+    list (test_lists)
+    list (train_lists)
+    train_labels: List[Any] = list()
+    test_prediction =list ()
+    for i in range(len(train_lists)):
 
-    for i in range(60000):
-        train_labels[i][0] = train_lists [i][0]
-        train_image[i][0:] = train_lists [i][1:]
-
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_image, train_labels)
+        train_labels.append(train_lists[i][0])
+        del train_lists[i][0]
+    #print (train_lists[:10][:10])
+    print (train_labels[:10])
+    #knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=3).fit(train_lists, train_labels)
     # print(knn.predict(test_list[:10]))
-    test_prediction = knn.predict(test_lists)
+    #test_prediction = knn.predict(test_lists)
     return test_prediction
 
 
 "for test purposes"
-# training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-# print("Successfully loaded training list")
-# test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-# print("Successfully loaded test list")
-#
-#
-# print(knn_sk(test_lists,training_lists)[:10])
 
-# def read_idx(filename):
+
+
+
+training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
+print("Successfully loaded training list")
+test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
+print("Successfully loaded test list")
+
+def dim(a):
+    if not type(a) == list:
+        return []
+    return [len(a)] + dim(a[0])
+
+
+print(dim(test_lists))
+
+
+#print (type(test_lists))
+#print(knn_sk(test_lists, training_lists)[:10])
+
+#def read_idx(filename):
 
 
 #     with open(filename, 'rb') as f:
