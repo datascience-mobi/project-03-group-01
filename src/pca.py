@@ -27,7 +27,8 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     :param test_list: test list
     :return: reduced input lists as tuple
     """
-    test_index = 3
+    import matplotlib.pyplot as plt
+    test_index = 61
 
     image_operations.draw(test_list[test_index])
 
@@ -41,7 +42,7 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     test_list = scaler.transform(test_list)
 
     # Create instance of pca and fit it only to the training images
-    pca = PCA(.3)
+    pca = PCA(.95)
     pca.fit(train_list)
 
     # Apply pca to both image lists
@@ -50,7 +51,24 @@ def reduce_dimensions(train_list, test_list) -> tuple:
 
     # Reconstruct one test image from its reduced form
     test_inverse = pca.inverse_transform(test_pca)
-    test_inverse = pca.inverse_transform(test_pca)
+
+    plt.figure(figsize=(8, 4))
+
+    # Original Image
+    plt.subplot(1, 2, 1)
+    plt.imshow(test_list[test_index].reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.xlabel('784 components', fontsize=14)
+    plt.title('Original Image', fontsize=20)
+
+    # 154 principal components
+    plt.subplot(1, 2, 2)
+    plt.imshow(test_inverse[test_index].reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.xlabel('154 components', fontsize=14)
+    plt.title('95% of Explained Variance', fontsize=20)
 
     # Draw image as it was created by inverse_transform
     image_operations.draw(test_inverse[test_index])
