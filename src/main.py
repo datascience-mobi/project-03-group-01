@@ -1,8 +1,7 @@
 import src.knn as knn
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
-import pickle
-import bz2
+import src.pickle_operations as pickle_IO
 
 tests_count = 0
 tests_success = 0
@@ -22,39 +21,6 @@ def get_success_rate():
     return round(success, 4)
 
 
-def save_pickles(list_name, path) -> None:
-    """
-    saves input object (here: tuple containing object list and integer list
-    :param list_name: list to be stored
-    :param path: where to save
-    :return: None
-    """
-    # open file and save to it
-    with open(path, "wb") as f:
-        pickle.dump(list_name, f)
-
-
-def save_compressed_pickles(list_name, path) -> None:
-    sfile = bz2.BZ2File(path, 'w')
-    pickle.dump(list_name, sfile)
-
-
-def load_compressed_pickles(path) -> object:
-    sfile = bz2.BZ2File(path, 'rb')
-    return pickle.load(sfile)
-
-
-def load_pickles(path) -> object:
-    """
-    loads stored pickles (here: object lists) from file
-    :param path: path to pickle file
-    :return: decompressed pickle / object list
-    """
-    # open file and return obtained content
-    with open(path, "rb") as f:
-        return pickle.load(f)
-
-
 if __name__ == '__main__':
     # number of nearest neighbors to check
     k = 20
@@ -67,10 +33,9 @@ if __name__ == '__main__':
     print("Successfully loaded test list")
 
     # Save created CsvImage lists in pickle files
-    save_compressed_pickles(training_lists, "../data/training.dat.bz2")
-    print("Successfully compressed training pickles")
-    save_compressed_pickles(test_lists, "../data/test.dat.bz2")
-    print("Successfully compressed test pickles")
+    pickle_IO.save_compressed_pickles(training_lists, "../data/training.dat.bz2")
+    pickle_IO.save_compressed_pickles(test_lists, "../data/test.dat.bz2")
+    print("Successfully compressed and stored pickles")
 
     # COMMENT OUT LINES ABOVE AFTER RUNNING ONCE, THEN ONLY RUN CODE BELOW
 
