@@ -18,6 +18,7 @@ def plot_k_values(input_list):
     plt.ylabel('Accuracy')
     plt.xlabel('#k')
     plt.title('Accuracy test')
+    plt.ylim(0.9, 1)
 
     plt.show()
 

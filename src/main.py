@@ -18,12 +18,11 @@ def sklearn_k_value_test(k_min, k_max):
     global total_number, success_number
     k_accuracy = list()
     for k in range(k_min, k_max):
-        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10)
+        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 100)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
             if prediction == test_lists[0][idx].label:
                 success_number += 1
-        print("Success rate = " + str(get_success_rate))
         k_accuracy.append([k, get_success_rate()])
         reset_rates()
     plot.plot_k_values(k_accuracy)
@@ -44,4 +43,4 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    sklearn_k_value_test(1, 5)
+    sklearn_k_value_test(1, 20)

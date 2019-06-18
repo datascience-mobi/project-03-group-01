@@ -1,5 +1,7 @@
 # from pylab import reParams
 import sklearn
+import src.load_image_vectors as load_image_vectors
+from sklearn import neighbors, metrics
 
 
 def knn_sk(test_tuple, train_tuple, n_neighbours, m_labels):
