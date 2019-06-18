@@ -1,7 +1,7 @@
 import src.knn as knn
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
-import src.pickle_operations as pickle_IO
+import src.pickle_operations as pickle_io
 
 tests_count = 0
 tests_success = 0
@@ -33,8 +33,8 @@ if __name__ == '__main__':
     print("Successfully loaded test list")
 
     # Save created CsvImage lists in pickle files
-    pickle_IO.save_compressed_pickles(training_lists, "../data/training.dat.bz2")
-    pickle_IO.save_compressed_pickles(test_lists, "../data/test.dat.bz2")
+    pickle_io.save_compressed_pickles(training_lists, "../data/training.dat.bz2")
+    pickle_io.save_compressed_pickles(test_lists, "../data/test.dat.bz2")
     print("Successfully compressed and stored pickles")
 
     # COMMENT OUT LINES ABOVE AFTER RUNNING ONCE, THEN ONLY RUN CODE BELOW
