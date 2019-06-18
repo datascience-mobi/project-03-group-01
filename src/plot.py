@@ -1,12 +1,11 @@
-import matplotlib as mlp
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_values (input_list):
+def plot_k_values(input_list):
     # for training purposes
 
-    labels, ys = zip(*a)
+    labels, ys = zip(*input_list)
     xs = np.arange(len(labels))
     width = 0.8
 
@@ -24,4 +23,4 @@ def plot_values (input_list):
 
 if __name__ == '__main__':
     a = [[1, 7], [2, 8], [3, 0], [4, 9], [5, 12]]
-    plot_values(a)
+    plot_k_values(a)

@@ -1,6 +1,7 @@
 import src.knn as knn
-import src.pca as pca
 import src.load_image_vectors as load_image_vectors
+import src.pca as pca
+import src.plot as plot
 
 tests_count = 0
 tests_success = 0
@@ -18,6 +19,25 @@ def get_success_rate():
     global tests_count, tests_success
     success = float(tests_success)/float(tests_count)
     return round(success, 4)
+
+
+def reset_rates():
+    tests_count = 0
+    tests_success = 0
+
+
+def k_value_test(k_min, k_max):
+    # creates a list in the form of [[k1, accuracy], [k2, accuracy], ...]
+    # then plots this created list as a diagram
+
+    k_accuracy = list()
+    for k in range(k_min, k_max):
+        for i in range(1, 100):
+            predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
+            set_success_rate(predicted_digit, test_lists[i])
+        k_accuracy.append([k, get_success_rate()])
+        reset_rates()
+    plot.plot_k_values(k_accuracy)
 
 
 if __name__ == '__main__':
