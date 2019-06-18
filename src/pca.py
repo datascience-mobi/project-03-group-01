@@ -88,6 +88,7 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     print(max(new_image))
 
     # Draw scaled image
+    new_image = [round(x) for x in new_image]
     image_operations.draw(new_image)
 
     # # TODO perform pca for 100% variance, remove k least variant components and revert pca
