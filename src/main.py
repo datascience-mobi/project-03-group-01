@@ -31,24 +31,24 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    image_operations.draw(test_list[1].image)
-    image_operations.save('../fname.png', test_list[1].image)
+    image_operations.draw(test_lists[1].image)
+    image_operations.save('../data/fname.png', test_lists[1].image)
     
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists])
     print("PCA finished successfully")
 
     # Replace unreduced CsvImage vectors by reduced ones, for training and test images
-    for i in range(len(training_lists[0])):
+    for i in range(len(training_lists)):
         # print(len(training_lists[0][i].image)) # for debugging
-        training_lists[0][i].image = reduced_images[0][i]
+        training_lists[i].image = reduced_images[0][i]
         # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
-    for i in range(len(test_lists[0])):
+    for i in range(len(test_lists)):
         # print(len(test_lists[0][i].image))
-        test_lists[0][i].image = reduced_images[1][i]
+        test_lists[i].image = reduced_images[1][i]
         # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
     print("Replaced images by reduced images")
 
     # perform KNN for dimension reduced images (one test image)
-    predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
-    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
+    predicted_digit = knn.knn_digit_prediction(test_lists[7], training_lists, k)
+    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[7].label))
