@@ -6,7 +6,7 @@ def load_gz(path) -> list:
     """
     Loads bytes from input .csv.gz file (single line)
     :param path: path to input file (.gz)
-    :return: list of images (label + intensity values) as string, separated by ","
+    :return: list of CsvImage Objects
     """
     input_file = gzip.open(path, 'rb')
 
@@ -39,7 +39,7 @@ def load_csv(path) -> list:
     """
     Loads strings from input .csv (multiple lines)
     :param path: path to .csv
-    :return: list
+    :return: list of CsvImage Objects
     """
     data_list = list()  # type: List[str]
 
@@ -70,6 +70,15 @@ def get_image_object_list(data_list) -> list:
     # to manually check if list is as long as expected
     print(len(image_list))
     return image_list
+
+
+def get_pixel_list(strings) -> list:
+    values = strings.split(",")
+    values.pop(0)
+    image = list()
+    for pixel in values:
+        image.append(int(pixel))
+    return image
 
 
 class CsvImage:
