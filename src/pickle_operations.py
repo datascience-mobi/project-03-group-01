@@ -27,7 +27,7 @@ def save_compressed_pickles(list_name, path) -> None:
     pickle.dump(list_name, bz2_file)
 
 
-def load_compressed_pickles(path) -> object:
+def load_compressed_pickles(path):
     """
     loads pickle object from compressed (bz2) file
     :param path: where is the file stored (directory) and what's its name
@@ -37,7 +37,7 @@ def load_compressed_pickles(path) -> object:
     return pickle.load(bz2_file)
 
 
-def load_pickles(path) -> object:
+def load_pickles(path):
     """
     loads stored pickles (here: object lists) from file
     :param path: path to pickle file
