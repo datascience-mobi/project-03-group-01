@@ -59,7 +59,7 @@ if __name__ == '__main__':
     print("Successfully loaded images from pickle files")
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists[0]], [csv_image.image for csv_image in test_lists[0]])
     print("PCA finished successfully")
     #
     # # Replace unreduced CsvImage vectors by reduced ones, for training and test images
