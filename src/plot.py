@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
-
 import src.KNN_sklearn as KNN_sklearn
 import src.load_image_vectors as load_image_vectors
 
@@ -27,21 +26,22 @@ def sklearn_k_value_test(k_min, k_max):
     # then plots this created list as a diagram
     global total_number, success_number
     k_accuracy = list()
+    print("Started sklearn_k_value_test")
     for k in range(k_min, k_max):
         prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
             if prediction == test_lists[0][idx].label:
                 success_number += 1
-        print("Success rate = " + str(get_success_rate))
         k_accuracy.append([k, get_success_rate()])
         reset_rates()
+        print("Finished accuracy calculation")
     plot_k_values(k_accuracy)
 
 
 def pca_variance_analysis(input_list):
     # calculates the retained variance for different dimensions and plots the resulting variance-matrix
-
+    print("Started pca_variance_analysis")
     scale = preprocessing.StandardScaler()
     scale.fit(input_list)
     input_list = scale.transform(input_list)
@@ -83,6 +83,8 @@ def plot_k_values(input_list):
     plt.xlabel('#k')
     plt.title('Accuracy test')
     plt.ylim(0.9, 1)  # limit y axis to see differences
+    plt.savefig('C://Users//lukas//sklearn_k_vale_test.png')  # save the figure to file as png
+    plt.savefig('C://Users//lukas//sklearn_k_vale_test.pdf')  # save the figure to file as pdf
     plt.show()
 
 
@@ -100,8 +102,8 @@ def plot_pca_variance(input_list):
 
 if __name__ == '__main__':
     # for testing purposes
-    a = [[1, 0.96], [2, 0.99], [3, 0.98], [4, 0.99], [5, 0.95]]
-    plot_k_values(a)
+    # a = [[1, 0.96], [2, 0.99], [3, 0.98], [4, 0.99], [5, 0.95]]
+    # plot_k_values(a)
 
     # load training and test images
     training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
@@ -109,5 +111,5 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    sklearn_k_value_test(1, 5)
-    pca_variance_analysis(test_lists[1])
+    sklearn_k_value_test(1, 4)
+    # pca_variance_analysis(test_lists[1])
