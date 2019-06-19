@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def transform(data) -> List[int]:
+def transform(data) -> np.ndarray:
     """
     Transforms list of intensity values into 28*28 numpy array
     :param data: list of intensity values for one image
