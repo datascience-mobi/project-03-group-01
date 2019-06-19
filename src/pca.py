@@ -54,9 +54,11 @@ def reduce_dimensions(train_list, test_list) -> tuple:
 
     plt.figure(figsize=(8, 4))
 
+    data = numpy.asarray(test_list[test_index], dtype=numpy.uint8)
+
     # Original Image
     plt.subplot(1, 2, 1)
-    plt.imshow(test_list[test_index].reshape(28, 28),
+    plt.imshow(data.reshape(28, 28),
                cmap=plt.cm.gray, interpolation='nearest',
                clim=(0, 255))
     plt.xlabel('784 components', fontsize=14)
@@ -72,6 +74,7 @@ def reduce_dimensions(train_list, test_list) -> tuple:
 
     # Draw image as it was created by inverse_transform
     image_operations.draw(test_inverse[test_index])
+    # TODO ersetzen durch plot as img_as_floatx64 or something
 
     # For debug: min and max values of reconstructed image
     print(min(test_inverse[test_index]))
@@ -79,6 +82,7 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     print(max(test_inverse[test_index]))
 
     new_image = test_inverse[test_index]
+    # new_image = numpy.asarray(test_inverse[test_index], dtype=numpy.uint8)
     # Scale reconstructed image values to a range from 0 to 255
     new_image = numpy.interp(new_image, (new_image.min(), new_image.max()), (0, 255))
 
@@ -88,6 +92,7 @@ def reduce_dimensions(train_list, test_list) -> tuple:
     print(max(new_image))
 
     # Draw scaled image
+    new_image.tolist
     new_image = [round(x) for x in new_image]
     image_operations.draw(new_image)
 
