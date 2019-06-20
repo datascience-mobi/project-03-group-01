@@ -77,4 +77,4 @@ if __name__ == '__main__':
     for digit in median_digits:
         median_distance.append(distance.euclidean(digit, test.image))
 
-    digit_evaluation.plot_grouped_distances(mean_distance, median_distance)
+    digit_evaluation.plot_grouped_distances(mean_distance, median_distance, False)
