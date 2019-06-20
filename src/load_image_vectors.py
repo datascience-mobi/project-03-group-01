@@ -99,9 +99,8 @@ class CsvImage:
 
         # first value is removed from the list because it is now stored as label
         # -> values list only contains intensity values now
-        values.pop(0)
 
         # image (accessible via object_name.image) is a list, containing all values components as integer
         self.image = list()
-        for pixel in values:
+        for pixel in values[1:]:
             self.image.append(int(pixel))
