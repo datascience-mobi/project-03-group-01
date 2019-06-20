@@ -4,6 +4,7 @@ import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle_io
 import numpy as np
 import src.image_operations as image_io
+import matplotlib.pyplot as plt
 
 tests_count = 0
 tests_success = 0
@@ -47,13 +48,50 @@ if __name__ == '__main__':
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from compressed pickle files")
 
-    for i in range(10):
-        training_array = np.asarray([csvimage.image for csvimage in training_lists if csvimage.label == i])
-
-        meta_digit = list()
+    for i in range(5):
+        training_array = np.asarray([csvimage.image for csvimage in training_lists if csvimage.label == 2*i])
+        print(2*i)
         meta_digit = (training_array.mean(axis=0))
-        image_io.draw(meta_digit)
+        # image_io.draw(meta_digit)
+        # Original Image
+        plt.subplot(5, 2, 2*i+1)
+        plt.imshow(meta_digit.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel('Mean of all '+str(2*i)+"'s", fontsize=14)
 
+        training_array = np.asarray([csvimage.image for csvimage in training_lists if csvimage.label == 2*i+1])
+        meta_digit = (training_array.mean(axis=0))
+        print(2*i+1)
+        # 154 principal components
+        plt.subplot(5, 2, 2*i+2)
+        plt.imshow(meta_digit.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel('Mean of all '+str(2*i+1)+"'s", fontsize=12)
+    plt.show()
+    for i in range(5):
+        training_array = np.asarray([csvimage.image for csvimage in training_lists if csvimage.label == 2*i])
+        print(2*i)
+        meta_digit = (np.median(training_array,axis=0))
+        # image_io.draw(meta_digit)
+        # Original Image
+        plt.subplot(5, 2, 2*i+1)
+        plt.imshow(meta_digit.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel('Median of all '+str(2*i)+"'s", fontsize=14)
+
+        training_array = np.asarray([csvimage.image for csvimage in training_lists if csvimage.label == 2*i+1])
+        meta_digit = (np.median(training_array,axis=0))
+        print(2*i+1)
+        # 154 principal components
+        plt.subplot(5, 2, 2*i+2)
+        plt.imshow(meta_digit.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel('Median of all '+str(2*i+1)+"'s", fontsize=12)
+    plt.show()
 
     # # Get reduced training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     # reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
