@@ -1,16 +1,12 @@
-import src.knn as knn
-# import src.pca as pca
-import src.image_operations as image_operations
-import src.load_image_vectors as load_image_vectors
+from scipy.spatial import distance
 import src.drawing_canvas as drawing_canvas
 import src.knn as knn
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle_io
-import numpy as np
 import src.image_operations as image_io
-import matplotlib.pyplot as plt
 import src.meta_digit_operations as meta_digit
+import src.digit_evaluation as digit_evaluation
 
 tests_count = 0
 tests_success = 0
@@ -53,25 +49,6 @@ if __name__ == '__main__':
     training_lists = pickle_io.load_pickles("../data/training.dat")
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from compressed pickle files")
-    #
-    # Get reduced training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions(training_lists[1], test_lists[1])
-    print("PCA finished successfully")
-
-    # Replace unreduced CsvImage vectors by reduced ones, for training and test images
-    for i in range(len(training_lists[0])):
-        # print(len(training_lists[0][i].image)) # for debugging
-        training_lists[0][i].image = reduced_images[0][i]
-        # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
-    for i in range(len(test_lists[0])):
-        # print(len(test_lists[0][i].image))
-        test_lists[0][i].image = reduced_images[1][i]
-        # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
-    print("Replaced images by reduced images")
-
-    # perform KNN for dimension reduced images (one test image)
-    predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
-    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
 
     # optionally save reference image for later inspection
     # image_operations.save('../fname.png', test_list[1].image)
@@ -86,10 +63,18 @@ if __name__ == '__main__':
     test = load_image_vectors.CsvImage(test_vector, is_list=True)
 
     # perform KNN
-    sorted_distances = knn.get_sorted_distances(test, training_list)
-    # print("Successfully calculated distance of one test image to all training images")
-    predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
+    predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
     print(predicted_digit)
 
-    meta_digit.show_mean_digits(training_lists)
-    meta_digit.show_median_digits(training_lists)
+    mean_digits = meta_digit.get_mean_digits(training_lists)
+    median_digits = meta_digit.get_median_digits(training_lists)
+
+    mean_distance = list()
+    for digit in mean_digits:
+        mean_distance.append(distance.euclidean(digit, test.image))
+
+    median_distance = list()
+    for digit in median_digits:
+        median_distance.append(distance.euclidean(digit, test.image))
+
+    digit_evaluation.plot_grouped_distances(mean_distance, median_distance)
