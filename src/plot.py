@@ -1,5 +1,4 @@
-import pickle
-
+import src.pickle_operations as pickle
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
@@ -27,7 +26,6 @@ def get_success_rate():
 
 def create_sklearn_k_accuracy_list(k_min, k_max):
     # creates a list in the form of [[k1, accuracy], [k2, accuracy], ...]
-    # then plots this created list as a diagram
     global total_number, success_number
     global k_accuracy
     print("Started sklearn_k_value_test")
@@ -39,9 +37,7 @@ def create_sklearn_k_accuracy_list(k_min, k_max):
                 success_number += 1
         k_accuracy.append([k, get_success_rate()])
         reset_rates()
-        print("Finished accuracy calculation" + str(k))
-    with open("k_accuracy.txt", "wb") as fp:  # Pickling
-        pickle.dump(k_accuracy, fp)
+        print("Finished accuracy calculation " + str(k))
 
 
 def pca_variance_analysis(input_list):
@@ -75,8 +71,8 @@ def pca_variance_analysis(input_list):
 
 
 def save_results():
-    plt.savefig('C://Users//lukas//sklearn_k_vale_test.png')  # save the figure to file as png
-    plt.savefig('C://Users//lukas//sklearn_k_vale_test.pdf')  # save the figure to file as pdf
+    plt.savefig("sklearn_k_vale_test.png")  # save the figure to file as png
+    plt.savefig("sklearn_k_vale_test.pdf")  # save the figure to file as pdf
 
 
 def plot_k_values(input_list):
@@ -120,8 +116,7 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    create_sklearn_k_accuracy_list(1, 3)
-    with open("k_accuracy.txt", "rb") as fp:  # Unpickling
-        b = pickle.load(fp)
-    plot_k_values(b)
+    create_sklearn_k_accuracy_list(1, 4)
+    pickle.save_pickles(k_accuracy, "k_accuracy.dat")
+    plot_k_values(pickle.load_pickles("k_accuracy.dat"))
     # pca_variance_analysis(test_lists[1])
