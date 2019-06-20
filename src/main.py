@@ -7,6 +7,10 @@ import src.knn as knn
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle_io
+import numpy as np
+import src.image_operations as image_io
+import matplotlib.pyplot as plt
+import src.meta_digit_operations as meta_digit
 
 tests_count = 0
 tests_success = 0
@@ -20,7 +24,7 @@ def set_success_rate(prediction, test_image) -> None:
     return None
 
 
-def get_success_rate ():
+def get_success_rate():
     global tests_count, tests_success
     success = float(tests_success)/float(tests_count)
     return round(success, 4)
@@ -86,3 +90,6 @@ if __name__ == '__main__':
     # print("Successfully calculated distance of one test image to all training images")
     predicted_digit = knn.knn_distance_prediction(sorted_distances, k)
     print(predicted_digit)
+
+    meta_digit.show_mean_digits(training_lists)
+    meta_digit.show_median_digits(training_lists)
