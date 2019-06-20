@@ -1,12 +1,16 @@
+import pickle
+
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
+
 import src.KNN_sklearn as KNN_sklearn
 import src.load_image_vectors as load_image_vectors
 
 total_number = 0
 success_number = 0
+k_accuracy = list()
 
 
 def reset_rates():
@@ -21,11 +25,11 @@ def get_success_rate():
     return round(success, 4)
 
 
-def sklearn_k_value_test(k_min, k_max):
+def create_sklearn_k_accuracy_list(k_min, k_max):
     # creates a list in the form of [[k1, accuracy], [k2, accuracy], ...]
     # then plots this created list as a diagram
     global total_number, success_number
-    k_accuracy = list()
+    global k_accuracy
     print("Started sklearn_k_value_test")
     for k in range(k_min, k_max):
         prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10)
@@ -35,8 +39,9 @@ def sklearn_k_value_test(k_min, k_max):
                 success_number += 1
         k_accuracy.append([k, get_success_rate()])
         reset_rates()
-        print("Finished accuracy calculation")
-    plot_k_values(k_accuracy)
+        print("Finished accuracy calculation" + str(k))
+    with open("k_accuracy.txt", "wb") as fp:  # Pickling
+        pickle.dump(k_accuracy, fp)
 
 
 def pca_variance_analysis(input_list):
@@ -69,6 +74,11 @@ def pca_variance_analysis(input_list):
 # plot.plot_k_values(k_accuracy)
 
 
+def save_results():
+    plt.savefig('C://Users//lukas//sklearn_k_vale_test.png')  # save the figure to file as png
+    plt.savefig('C://Users//lukas//sklearn_k_vale_test.pdf')  # save the figure to file as pdf
+
+
 def plot_k_values(input_list):
     # plots a list in the form of [[k1, accuracy], [k2, accuracy], ...] as a diagram
 
@@ -82,9 +92,8 @@ def plot_k_values(input_list):
     plt.ylabel('Accuracy')
     plt.xlabel('#k')
     plt.title('Accuracy test')
-    plt.ylim(0.9, 1)  # limit y axis to see differences
-    plt.savefig('C://Users//lukas//sklearn_k_vale_test.png')  # save the figure to file as png
-    plt.savefig('C://Users//lukas//sklearn_k_vale_test.pdf')  # save the figure to file as pdf
+    plt.ylim(0.95, 1)  # limit y axis to see differences
+    save_results()
     plt.show()
 
 
@@ -111,5 +120,8 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    sklearn_k_value_test(1, 4)
+    create_sklearn_k_accuracy_list(1, 3)
+    with open("k_accuracy.txt", "rb") as fp:  # Unpickling
+        b = pickle.load(fp)
+    plot_k_values(b)
     # pca_variance_analysis(test_lists[1])
