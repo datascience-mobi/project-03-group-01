@@ -1,9 +1,12 @@
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.core.window import Window
 from kivy.config import Config
 from PIL import Image, ImageFilter
+import kivy.uix.image as image
+from kivy.uix.button import Button
 import image_operations
 
 
@@ -107,7 +110,19 @@ class MyPaintWidget(Widget):
 class MyPaintApp(App):
 
     def build(self):
-        return MyPaintWidget()
+        superBox = BoxLayout(orientation='vertical')
+        superBox.add_widget(MyPaintWidget())
+        button = Button(text="hi", size_hint=(0.1, .1))
+        superBox.add_widget(button)
+        try:
+            # load the image
+            picture = image(source="mnist.png")
+            # add to the main field
+            superBox.add_widget(picture)
+        except Exception as e:
+            print('Pictures: Unable to load <%s>' % "fname.png")
+
+        return superBox
 
 
 def drawn_image() -> list:
