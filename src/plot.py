@@ -30,7 +30,7 @@ def create_sklearn_k_accuracy_list(k_min, k_max):
     global k_accuracy
     print("Started sklearn_k_value_test")
     for k in range(k_min, k_max):
-        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10)
+        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10000)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
             if prediction == test_lists[0][idx].label:
@@ -71,8 +71,8 @@ def pca_variance_analysis(input_list):
 
 
 def save_results():
-    plt.savefig("sklearn_k_vale_test.png")  # save the figure to file as png
-    plt.savefig("sklearn_k_vale_test.pdf")  # save the figure to file as pdf
+    plt.savefig("sklearn_k_value_test.png")  # save the figure to file as png
+    plt.savefig("sklearn_k_value_test.pdf")  # save the figure to file as pdf
 
 
 def plot_k_values(input_list):
@@ -88,7 +88,7 @@ def plot_k_values(input_list):
     plt.ylabel('Accuracy')
     plt.xlabel('#k')
     plt.title('Accuracy test')
-    plt.ylim(0.95, 1)  # limit y axis to see differences
+    plt.ylim(0.96, 0.972)  # limit y axis to see differences
     save_results()
     plt.show()
 
@@ -106,6 +106,7 @@ def plot_pca_variance(input_list):
 
 
 if __name__ == '__main__':
+    '''Whatever you do,DO NOT change k_accuracy.dat under any circumstances'''
     # for testing purposes
     # a = [[1, 0.96], [2, 0.99], [3, 0.98], [4, 0.99], [5, 0.95]]
     # plot_k_values(a)
@@ -116,7 +117,7 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    create_sklearn_k_accuracy_list(1, 4)
-    pickle.save_pickles(k_accuracy, "k_accuracy.dat")
+    # create_sklearn_k_accuracy_list(1, 11)
+    # pickle.save_pickles(k_accuracy, "k_accuracy2.dat")
     plot_k_values(pickle.load_pickles("k_accuracy.dat"))
     # pca_variance_analysis(test_lists[1])
