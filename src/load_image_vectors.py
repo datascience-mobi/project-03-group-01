@@ -63,13 +63,11 @@ def get_image_object_list(data_list):
     :return: list of CsvImage objects
     """
     image_list = list()
-    simple_image_list = list()
     for data in data_list:
         image = CsvImage(data)
         image_list.append(image)
-        simple_image_list.append(get_pixel_list(data))
     print(len(image_list))
-    return image_list, simple_image_list
+    return image_list
 
 
 def get_pixel_list(strings) -> list:
