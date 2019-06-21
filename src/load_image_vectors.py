@@ -67,7 +67,6 @@ def get_image_object_list(data_list) -> list:
         image = CsvImage(data)
         image_list.append(image)
 
-    # to manually check if list is as long as expected
     print(len(image_list))
     return image_list
 
