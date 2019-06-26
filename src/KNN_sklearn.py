@@ -1,4 +1,3 @@
-# from pylab import reParams
 import sklearn
 
 import src.load_image_vectors as load_image_vectors
@@ -14,14 +13,15 @@ from sklearn import neighbors, metrics
 def knn_sk(test_tuple, train_tuple, n_neighbours, m_labels):
     train_labels = list()
     test_pred = list()
-    for i in range(len(train_tuple[0])):
-        train_labels.append(train_tuple[0][i].label)
+    for i in range(len(train_tuple)):
+        train_labels.append(train_tuple[i].label)
+    print(train_labels)
     #print (train_lists[:10][:10])
     # print (train_labels[:10])
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit(train_tuple[1], train_labels)
+    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in training_lists], train_labels)
     # print(knn.predict(test_list[:10]))
     for j in range(m_labels):
-        test_pred.append(test_tuple[1][j])
+        test_pred.append([csv_image.image for csv_image in training_lists][j])
     test_prediction = knn.predict(test_pred)
     return test_prediction
     # return type (train_labels), type (test_lists), type (train_lists)
@@ -33,6 +33,7 @@ training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
 print("Successfully loaded training list")
 test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
 print("Successfully loaded test list")
+print(knn_sk(test_lists, training_lists, 3, 10))
 
 # def dim(a):
 #     if not type(a) == list:
@@ -43,7 +44,6 @@ print("Successfully loaded test list")
 # print(dim(test_lists))
 
 
-print(knn_sk(test_lists, training_lists, 3, 10))
 #print (type(training_lists))
 #def read_idx(filename):
 
