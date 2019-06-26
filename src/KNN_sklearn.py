@@ -1,7 +1,8 @@
 import sklearn
-
 import src.load_image_vectors as load_image_vectors
+import src.pickle_operations as pickle_io
 from sklearn import neighbors, metrics
+
 
 "the function takes two tuples: train and test; N_neighbours for KNN; M_labels for output "
 "it reads the labels of test images and creates the 784 dim. space,"
@@ -13,12 +14,12 @@ from sklearn import neighbors, metrics
 def knn_sk(test_tuple, train_tuple, n_neighbours, m_labels):
     train_labels = list()
     test_pred = list()
-    for i in range(len(train_tuple)):
-        train_labels.append(train_tuple[i].label)
-    print(train_labels)
+    # for i in range(len(train_tuple)):
+    #     train_labels.append(train_tuple[i].label)
+    # print(train_labels)
     #print (train_lists[:10][:10])
     # print (train_labels[:10])
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in training_lists], train_labels)
+    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in training_lists], [csv_image.label for csv_image in training_lists])
     # print(knn.predict(test_list[:10]))
     for j in range(m_labels):
         test_pred.append([csv_image.image for csv_image in training_lists][j])
@@ -28,38 +29,9 @@ def knn_sk(test_tuple, train_tuple, n_neighbours, m_labels):
 
 
 "for test purposes"
-
-training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-print("Successfully loaded training list")
-test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-print("Successfully loaded test list")
-print(knn_sk(test_lists, training_lists, 3, 10))
-
-# def dim(a):
-#     if not type(a) == list:
-#         return []
-#     return [len(a)] + dim(a[0])
-
-
-# print(dim(test_lists))
-
-
-#print (type(training_lists))
-#def read_idx(filename):
-
-
-#     with open(filename, 'rb') as f:
-#         zero, data_type, dims = struct.unpack('>HBB', f.read(4))
-#         shape = tuple(struct.unpack('>I', f.read(4))[0] for d in range(dims))
-#         return np.fromstring(f.read(), dtype=np.uint8).reshape(shape)
-
-
-# raw_train = read_idx("../data_for_sklearn_KNN/train-images.idx3-ubyte")
-# # print(raw_train)
-# # print(raw_train.shape
-# train_data = np.reshape(raw_train,(60000,28*28))
-# train_label= read_idx("../data_for_sklearn_KNN/train-labels.idx1-ubyte")
-# # print(train_data.shape)
-# test_label = read_idx("../data_for_sklearn_KNN/t10k-labels.idx1-ubyte")
-# raw_test = read_idx("../data_for_sklearn_KNN/t10k-images.idx3-ubyte")
-# test_data = np.reshape (raw_test, (10000, 28*28))
+if __name__ == '__main__':
+    training_lists = pickle_io.load_pickles('../data/training.dat')
+    print("Successfully loaded training list")
+    test_lists = pickle_io.load_pickles('../data/test.dat')
+    print("Successfully loaded test list")
+    print(knn_sk(test_lists, training_lists, 3, 10))
