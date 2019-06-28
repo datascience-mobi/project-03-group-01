@@ -8,6 +8,7 @@ from PIL import Image, ImageFilter
 import kivy.uix.image as image
 from kivy.uix.button import Button
 import image_operations
+from random import randint
 
 
 def image_prepare(path) -> list:
@@ -109,23 +110,27 @@ class MyPaintWidget(Widget):
 # TODO probably creates the canvas window
 class MyPaintApp(App):
 
+    def __init__(self, title):
+        App.__init__(self)
+        self.title="Please draw a "+str(title)
+
     def build(self):
-        superBox = BoxLayout(orientation='vertical')
-        superBox.add_widget(MyPaintWidget())
-        button = Button(text="hi", size_hint=(0.1, .1))
-        superBox.add_widget(button)
+        super_box = BoxLayout(orientation='vertical')
+        super_box.add_widget(MyPaintWidget())
+        # button = Button(text="hi", size_hint=(0.1, .1))
+        # super_box.add_widget(button)
         try:
             # load the image
             picture = image(source="mnist.png")
             # add to the main field
-            superBox.add_widget(picture)
+            super_box.add_widget(picture)
         except Exception as e:
             print('Pictures: Unable to load <%s>' % "fname.png")
 
-        return superBox
+        return super_box
 
 
-def drawn_image() -> list:
+def drawn_image(digit) -> list:
     """
     Initializes draw_canvas
     :return: mnist compatible drawn image
@@ -137,7 +142,7 @@ def drawn_image() -> list:
     Config.write()
 
     # Runs drawing window
-    MyPaintApp().run()
+    MyPaintApp(digit).run()
 
     # Transform saved image to mnist style image
     x = image_prepare('test.png')  # path must fit path in MyPaintWidget.on_keyboard_down
@@ -153,4 +158,6 @@ def drawn_image() -> list:
 
 if __name__ == '__main__':
     # For debugging purposes -> directly call drawing functions without further recognition
-    y = drawn_image()
+    random_digit = randint(0, 9)
+    print(random_digit)
+    y = drawn_image(random_digit)

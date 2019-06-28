@@ -1,3 +1,4 @@
+from random import randint
 from scipy.spatial import distance
 import src.drawing_canvas as drawing_canvas
 import src.knn as knn
@@ -7,6 +8,7 @@ import src.pickle_operations as pickle_io
 import src.image_operations as image_io
 import src.meta_digit_operations as meta_digit
 import src.digit_evaluation as digit_evaluation
+import numpy as np
 
 tests_count = 0
 tests_success = 0
@@ -54,7 +56,9 @@ if __name__ == '__main__':
     # image_operations.save('../fname.png', test_list[1].image)
 
     # get drawn image, adjusted for mnist
-    test_vector = drawing_canvas.drawn_image()
+    random_digit = randint(0, 9)
+    print(random_digit)
+    test_vector = drawing_canvas.drawn_image(random_digit)
 
     # insert label to fit test_vector for CsvImage class
     test_vector.insert(0, -1)
@@ -78,3 +82,4 @@ if __name__ == '__main__':
         median_distance.append(distance.euclidean(digit, test.image))
 
     digit_evaluation.plot_grouped_distances(mean_distance, median_distance, False)
+    digit_evaluation.show_difference(np.asarray(test.image), random_digit, mean_digits[random_digit], median_digits[random_digit])

@@ -3,6 +3,43 @@ import numpy as np
 import math
 
 
+def show_difference(test_image, digit, mean_digit, median_digit):
+    plt.subplot(3, 2, 1)
+    plt.imshow(test_image.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.xlabel('Your drawn image', fontsize=14)
+    plt.subplot(3, 2, 3)
+    plt.imshow(mean_digit.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.xlabel('Mean of all training '+str(digit)+"s", fontsize=14)
+    plt.subplot(3, 2, 4)
+    plt.imshow(median_digit.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.xlabel('Median of all training '+str(digit)+"s", fontsize=14)
+    plt.subplot(3, 2, 5)
+    plt.imshow(test_image.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.imshow(mean_digit.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255), alpha=0.5)
+
+    plt.xlabel('Your drawn image + Mean', fontsize=14)
+    plt.subplot(3, 2, 6)
+    plt.imshow(test_image.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255))
+    plt.imshow(median_digit.reshape(28, 28),
+               cmap=plt.cm.gray, interpolation='nearest',
+               clim=(0, 255), alpha=0.5)
+
+    plt.xlabel('Your drawn image + Median', fontsize=14)
+    plt.show()
+
+
 def plot_grouped_distances(mean_distances, median_distances, zoomed):
 
     below_threshold = min(mean_distances + median_distances)
