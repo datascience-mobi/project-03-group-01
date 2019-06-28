@@ -11,21 +11,24 @@ from sklearn import neighbors, metrics
 "output - M_labels of test_tuple"
 
 
-def knn_sk(test_tuple, train_tuple, n_neighbours, m_labels):
-    train_labels = list()
+def knn_sk(test_images, train_images, n_neighbours, min_index, max_index):
+    """
+    performs the sklearn knn implementation from test image number min_index up to max_index -1
+    :param test_images: list of test images as CsvImages
+    :param train_images:  list of training images as CsvImages
+    :param n_neighbours: number of neighbors for KNN
+    :param min_index: lowest test image number to perform the knn for
+    :param max_index: lowest test image number NOT to perform the knn for
+    :return: 2d list of type [[10, 0], [11, 6]] meaning [test image number, prediction]
+    """
     test_pred = list()
-    # for i in range(len(train_tuple)):
-    #     train_labels.append(train_tuple[i].label)
-    # print(train_labels)
-    #print (train_lists[:10][:10])
-    # print (train_labels[:10])
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in training_lists], [csv_image.label for csv_image in training_lists])
-    # print(knn.predict(test_list[:10]))
-    for j in range(m_labels):
-        test_pred.append([csv_image.image for csv_image in training_lists][j])
-    test_prediction = knn.predict(test_pred)
+    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in train_images], [csv_image.label for csv_image in train_images])
+    for j in range(min_index, max_index):
+        test_pred.append([csv_image.image for csv_image in test_images][j])
+        print(j)
+    test_prediction = knn.predict(test_pred).tolist()
+    test_prediction = [list(a) for a in zip([j for j in range(min_index, max_index)], test_prediction)]
     return test_prediction
-    # return type (train_labels), type (test_lists), type (train_lists)
 
 
 "for test purposes"
@@ -34,4 +37,4 @@ if __name__ == '__main__':
     print("Successfully loaded training list")
     test_lists = pickle_io.load_pickles('../data/test.dat')
     print("Successfully loaded test list")
-    print(knn_sk(test_lists, training_lists, 3, 10))
+    print(knn_sk(test_lists, training_lists, 3, 10, 15))
