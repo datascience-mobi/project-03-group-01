@@ -50,3 +50,6 @@ if __name__ == '__main__':
     print("Successfully loaded images from compressed pickle files")
     meta_digit.show_mean_digits(training_lists)
     meta_digit.show_median_digits(training_lists)
+    mean_digits = meta_digit.get_mean_digits(training_lists)
+    median_digits = meta_digit.get_median_digits(training_lists)
+    meta_digit.show_as_heatmap(mean_digits, median_digits)

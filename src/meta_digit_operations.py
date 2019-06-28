@@ -1,5 +1,44 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.spatial import distance
+
+
+def show_as_heatmap(mean_digits, median_digits):
+    heat_list_mean = list()
+    plt.subplot(1, 2, 1)
+    # min_dist_mean = 0
+    for i in range(len(mean_digits)):
+        for j in range(len(mean_digits)):
+            dist = distance.euclidean(mean_digits[i], mean_digits[j])
+            # if dist < min_dist_mean and not dist == 0:
+            #     min_dist_mean = dist
+            heat_list_mean.append(dist)
+    min_dist_mean = min([heat for heat in heat_list_mean if not heat == 0])
+    max_dist_mean = max(heat_list_mean)
+    # a = np.random.random((16, 16))
+    heat_list_mean = np.asarray(heat_list_mean)
+
+    plt.imshow(heat_list_mean.reshape(10, 10), cmap='hot', interpolation='nearest')
+    plt.xlabel(f"Distances among Mean Digits \n Min: {min_dist_mean} \n Max: {max_dist_mean} \n Diff: {min_dist_mean/max_dist_mean}")
+    plt.subplot(1, 2, 2)
+    heat_list_median = list()
+    min_dist_median = 0
+    for i in range(len(median_digits)):
+        for j in range(len(mean_digits)):
+            dist = distance.euclidean(median_digits[i], median_digits[j])
+            if dist < min_dist_median and not dist == 0:
+                min_dist_median = dist
+            heat_list_median.append(dist)
+    # a = np.random.random((16, 16))
+    min_dist_median = min([heat for heat in heat_list_median if not heat == 0])
+    max_dist_median = max(heat_list_median)
+
+    heat_list = np.asarray(heat_list_median)
+
+    plt.imshow(heat_list.reshape(10,10), cmap='hot', interpolation='nearest')
+    plt.xlabel(f"Distances among Median Digits \n Min: {min_dist_median} \n Max: {max_dist_median} \n Diff: {min_dist_median/max_dist_median}")
+
+    plt.show()
 
 
 def get_mean_digits(training_images):
