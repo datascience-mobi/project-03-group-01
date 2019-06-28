@@ -1,4 +1,5 @@
 import src.knn as knn
+import src.image_operations as image_operations
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle_io
