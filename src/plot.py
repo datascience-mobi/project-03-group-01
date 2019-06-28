@@ -1,4 +1,3 @@
-import src.pickle_operations as pickle
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
@@ -6,38 +5,26 @@ from sklearn.decomposition import PCA
 
 import src.KNN_sklearn as KNN_sklearn
 import src.load_image_vectors as load_image_vectors
-
-total_number = 0
-success_number = 0
-k_accuracy = list()
+import src.pickle_operations as pickle
 
 
-def reset_rates():
-    global total_number, success_number
-    success_number = 0
+def create_sklearn_k_accuracy_dictionary(k_min, k_max):
+    # creates a dictionary in the form of [[k1, accuracy], [k2, accuracy], ...]
     total_number = 0
-
-
-def get_success_rate():
-    global total_number, success_number
-    success = float(success_number) / float(total_number)
-    return round(success, 4)
-
-
-def create_sklearn_k_accuracy_list(k_min, k_max):
-    # creates a list in the form of [[k1, accuracy], [k2, accuracy], ...]
-    global total_number, success_number
-    global k_accuracy
+    success_number = 0
+    k_accuracy = dict()
     print("Started sklearn_k_value_test")
     for k in range(k_min, k_max):
-        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10000)
+        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
             if prediction == test_lists[0][idx].label:
                 success_number += 1
-        k_accuracy.append([k, get_success_rate()])
-        reset_rates()
+        k_accuracy[k] = float(success_number) / float(total_number)
+        success_number = 0
+        total_number = 0
         print("Finished accuracy calculation " + str(k))
+    return k_accuracy
 
 
 def pca_variance_analysis(input_list):
@@ -117,7 +104,7 @@ if __name__ == '__main__':
     test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     print("Successfully loaded test list")
 
-    # create_sklearn_k_accuracy_list(1, 11)
-    # pickle.save_pickles(k_accuracy, "k_accuracy2.dat")
-    plot_k_values(pickle.load_pickles("k_accuracy.dat"))
+    create_sklearn_k_accuracy_dictionary(1, 11)
+    pickle.save_pickles(k_accuracy, "k_accuracy2.dat")
+    plot_k_values(pickle.load_pickles("k_accuracy.dat2"))
     # pca_variance_analysis(test_lists[1])
