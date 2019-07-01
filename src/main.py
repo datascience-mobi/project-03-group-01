@@ -52,15 +52,14 @@ if __name__ == '__main__':
     # save_pickles(test_lists, "../data/test.dat")
 
     # Open CsvImage lists from pickle files - lowers loading time by factor 10
-    training_lists = [None] * 2
-    training_lists[0], training_lists[1] = load_pickles("../data/training.dat")
-    test_lists = [None] * 2
-    test_lists[0], test_lists[1] = load_pickles("../data/test.dat")
+    training_lists = load_pickles("../data/training.dat")
+    test_lists = load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists[0]], [csv_image.image for csv_image in test_lists[0]])
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists])
     print("PCA finished successfully")
+    pca.increase_dimensions([csv_image.image for csv_image in training_lists], reduced_images[1])
     #
     # # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     # training_lists[1] = reduced_images[0]
