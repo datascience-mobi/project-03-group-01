@@ -2,6 +2,7 @@ from random import randint
 from scipy.spatial import distance
 import src.drawing_canvas as drawing_canvas
 import src.knn as knn
+import src.image_operations as image_operations
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle_io
@@ -40,9 +41,9 @@ if __name__ == '__main__':
     # print("Successfully loaded test list")
     #
     # # Save created CsvImage lists in pickle files
-    # pickle_io.save_compressed_pickles(training_lists, "../data/training.dat.bz2")
-    # pickle_io.save_compressed_pickles(test_lists, "../data/test.dat.bz2")
-    # print("Successfully compressed and stored pickles")
+    # pickle_io.save_pickles(training_lists, "../data/training.dat")
+    # pickle_io.save_pickles(test_lists, "../data/test.dat")
+    # print("Successfully stored pickles")
 
     # COMMENT OUT LINES ABOVE AFTER RUNNING ONCE, THEN ONLY RUN CODE BELOW
 
