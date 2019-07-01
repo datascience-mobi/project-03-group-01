@@ -1,8 +1,9 @@
 import src.knn as knn
+import src.image_operations as image_operations
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
-import pickle
 
+import src.pickle_operations as pickle_io
 tests_count = 0
 tests_success = 0
 
@@ -21,39 +22,28 @@ def get_success_rate():
     return round(success, 4)
 
 
-def save_pickles(list_name, path):
-    # PIK = "pickle.dat"
-    #
-    # data = ["A", "b", "C", "d"]
-    with open(path, "wb") as f:
-        pickle.dump(list_name, f)
-
-
-def load_pickles(path):
-    with open(path, "rb") as f:
-        return pickle.load(f)
-
-
 if __name__ == '__main__':
     # number of nearest neighbors to check
     k = 20
 
-    # # TODO lists are currently a tuple of CsvImage Objects and the pure lists
+    # # TODO lists are currently a tuple of CsvImage Objects and the pure integer lists
     # # load training and test images - only necessary once combined with saving as pickle
-    # training_lists = [None] * 2
-    # training_lists[0], training_lists[1] = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
+    # training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
     # print("Successfully loaded training list")
-    # test_lists = [None] * 2
-    # test_lists[0], test_lists[1] = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
+    # test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
     # print("Successfully loaded test list")
     #
     # # Save created CsvImage lists in pickle files
-    # save_pickles(training_lists, "../data/training.dat")
-    # save_pickles(test_lists, "../data/test.dat")
+    # pickle_io.save_pickles(training_lists, "../data/training.dat")
+    # pickle_io.save_pickles(test_lists, "../data/test.dat")
+    # print("Successfully stored pickles")
+
+    # COMMENT OUT LINES ABOVE AFTER RUNNING ONCE, THEN ONLY RUN CODE BELOW
 
     # Open CsvImage lists from pickle files - lowers loading time by factor 10
-    training_lists = load_pickles("../data/training.dat")
-    test_lists = load_pickles("../data/test.dat")
+    # loading from bz2: 15.75s, from uncompressed .dat: 4.458s
+    training_lists = pickle_io.load_pickles("../data/training.dat")
+    test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
 
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
@@ -93,3 +83,6 @@ if __name__ == '__main__':
     # predicted_digit = knn.knn_digit_prediction(test_lists[0][7], training_lists[0], k)
     # print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[0][7].label))
 
+    # perform KNN for dimension reduced images (one test image)
+    predicted_digit = knn.knn_digit_prediction(test_lists[7], training_lists, k)
+    print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[7].label))
