@@ -2,8 +2,8 @@ import src.knn as knn
 import src.image_operations as image_operations
 import src.pca as pca
 import src.load_image_vectors as load_image_vectors
-import src.pickle_operations as pickle_io
 
+import src.pickle_operations as pickle_io
 tests_count = 0
 tests_success = 0
 
@@ -45,12 +45,16 @@ if __name__ == '__main__':
     training_lists = pickle_io.load_pickles("../data/training.dat")
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
-    
-    # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
-    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists])
-    print("PCA finished successfully")
 
+    # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], 784)
+    print("PCA finished successfully")
+    for i in [10, 20, 50, 100, 200, 400, 784]:
+        pca.increase_dimensions(reduced_images[2], [red[:i] for red in reduced_images[1]], i)
+    #
     # Replace unreduced CsvImage vectors by reduced ones, for training and test images
+    # training_lists[1] = reduced_images[0]
+    # test_lists[1] = reduced_images[1]
     for i in range(len(training_lists)):
         # print(len(training_lists[0][i].image)) # for debugging
         training_lists[i].image = reduced_images[0][i]
@@ -60,6 +64,17 @@ if __name__ == '__main__':
         test_lists[i].image = reduced_images[1][i]
         # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
     print("Replaced images by reduced images")
+    #
+    # # Save created CsvImage lists in pickle files
+    # save_pickles(training_lists, "../data/red_training.dat")
+    # save_pickles(test_lists, "../data/red_test.dat")
+    #
+    # # # Open CsvImage lists from pickle files - lowers loading time by factor 10
+    # training_lists = [None] * 2
+    # training_lists[0], training_lists[1] = load_pickles("../data/red_training.dat")
+    # test_lists = [None] * 2
+    # test_lists[0], test_lists[1] = load_pickles("../data/red_test.dat")
+    # print("Successfully loaded images from pickle files")
 
     # perform KNN for dimension reduced images (one test image)
     predicted_digit = knn.knn_digit_prediction(test_lists[7], training_lists, k)
