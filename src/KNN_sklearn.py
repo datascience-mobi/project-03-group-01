@@ -1,4 +1,6 @@
 import sklearn
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import neighbors, metrics
 
 
 def knn_sk(test_images, train_images, n_neighbours, min_index, max_index):
