@@ -7,10 +7,10 @@ import src.pca as pca
 import src.KNN_sklearn as KNN_sklearn
 import src.load_image_vectors as load_image_vectors
 import src.pickle_operations as pickle
-import itertools
+from itertools import accumulate
 
 
-def sklearn_k_accuracy_test(k_min, k_max):
+def k_accuracy_test(k_min, k_max):
     # creates a list in the form of [[k1, accuracy1], [k2, accuracy2], ...]
     # then saves the list
     # then plots the list
@@ -19,14 +19,16 @@ def sklearn_k_accuracy_test(k_min, k_max):
     for k in range(k_min, k_max):
         success_number = 0
         total_number = 0
-        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, k, 10, 15)
+        prediction_list = KNN_sklearn.knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 1, 5)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
-            if prediction == test_lists[idx].label:
+            if prediction[1] == test_lists[prediction[0]].label:
                 success_number += 1
+        print(f"total number:{total_number}, success number:{success_number}")
         accuracy = float(success_number) / float(total_number)
         k_accuracy.append([k, accuracy])
         print("Finished accuracy calculation " + str(k))
+    print('k_accuracy = ', k_accuracy)
     pickle.save_pickles(k_accuracy, "k_accuracy2.dat")
     # plot_accuracy(pickle.load_pickles("k_accuracy2.dat")) for testing purposes
     return k_accuracy
@@ -46,30 +48,25 @@ def pca_variance_analysis(input_list):
     plot_pca_variance(var)
 
 
-def pca_accuracy_test():
+def pca_accuracy_test(test_lists, training_lists):
     print("Started pca_accuracy_test")
     pca_accuracy = list()
-    for n in range(1, 748):
-        reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists],
-                                            [csv_image.image for csv_image in test_lists], n)
-        for i in range(len(training_lists)):
-            # print(len(training_lists[0][i].image)) # for debugging
-            training_lists[i].image = reduced_images[0][i]
-            # print(len(training_lists[0][i].image))  # how many dimensions after reduction, slows script down
-        for i in range(len(test_lists)):
-            # print(len(test_lists[0][i].image))
-            test_lists[i].image = reduced_images[1][i]
-            # print(len(test_lists[0][i].image))  # how many dimensions after reduction, slows script down
+    n_steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100,
+                120, 140, 160, 180, 200, 250, 300, 350, 400, 500, 600, 700, 784]
+    for n in n_steps:
+        print(f"n = {n}")
+        reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], n)
         all_images = 0
         success_images = 0
-        prediction_list = KNN_sklearn.knn_sk(test_lists, training_lists, 3, 1, 10)
+        prediction_list = KNN_sklearn.knn_sk(reduced_images[0], reduced_images[1], [csv_image.label for csv_image in training_lists], 3, 1, 10000)
         for idx, prediction in enumerate(prediction_list):
             all_images += 1
-            if prediction == test_lists[idx].label:
+            if prediction[1] == test_lists[prediction[0]].label:
                 success_images += 1
         accuracy = float(success_images) / float(all_images)
         pca_accuracy.append([n, accuracy])
         print("Finished accuracy calculation " + str(n))
+    print('pca_accuracy = ', pca_accuracy)
     pickle.save_pickles(pca_accuracy, "pca_accuracy.dat")
     return pca_accuracy
 
@@ -91,8 +88,8 @@ def pca_accuracy_test():
 
 
 def save_results():
-    plt.savefig("sklearn_k_value_test.png")  # save the figure to file as png
-    plt.savefig("sklearn_k_value_test.pdf")  # save the figure to file as pdf
+    plt.savefig("accuracy_test.png")  # save the figure to file as png
+    plt.savefig("accuracy_test.pdf")  # save the figure to file as pdf
 
 
 def plot_accuracy(input_list):
@@ -134,8 +131,8 @@ if __name__ == '__main__':
     test_lists = pickle.load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
 
-    # sklearn_k_accuracy_test(1, 3)
+    # k_accuracy_test(1, 4)
     # plot_accuracy(pickle.load_pickles("k_accuracy2.dat"))
     # pca_variance_analysis(test_lists[1])
-    pca_accuracy_test()
+    pca_accuracy_test(test_lists, training_lists)
     plot_accuracy(pickle.load_pickles("pca_accuracy.dat"))

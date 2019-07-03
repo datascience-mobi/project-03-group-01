@@ -46,7 +46,7 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     """
     test_index = 61
 
-    image_operations.draw(test_list[test_index])
+    # image_operations.draw(test_list[test_index].label)
 
     scaler = preprocessing.StandardScaler()
 

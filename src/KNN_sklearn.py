@@ -3,7 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import neighbors, metrics
 
 
-def knn_sk(test_images, train_images, n_neighbours, min_index, max_index):
+def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max_index):
     """
     performs the sklearn knn implementation from test image number min_index up to max_index -1
     :param test_images: list of test images as CsvImages
@@ -18,12 +18,11 @@ def knn_sk(test_images, train_images, n_neighbours, min_index, max_index):
     # the function needs two lists: of data points in 784 dim. space and of their labels
     # they are written in addition .fit ()
     # n_neighbours defines how many neighbours we want to take while making prediction
-    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in train_images], [csv_image.label for csv_image in train_images])
+    knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit(train_images, train_labels)
     # loop for prediction of only specific wanted digits between min_index and max_index-1
     # the actual points of test data set are extracted as test_pred
     for j in range(min_index, max_index):
-        test_pred.append([csv_image.image for csv_image in test_images][j])
-        print(j)
+        test_pred.append(test_images[j])
     # application of knn to the extracted test points and converting to list
     test_prediction = knn.predict(test_pred).tolist()
     # creating 2D list by pairing the elements of two tuples: range of wanted indexes and test_prediction
