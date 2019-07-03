@@ -67,7 +67,7 @@ def pca_accuracy_test(test_lists, training_lists):
         pca_accuracy.append([n, accuracy])
         print("Finished accuracy calculation " + str(n))
     print('pca_accuracy = ', pca_accuracy)
-    pickle.save_pickles(pca_accuracy, "pca_accuracy.dat")
+    pickle.save_pickles(pca_accuracy, "pca_accuracy2.dat")
     return pca_accuracy
 
 
@@ -105,7 +105,7 @@ def plot_accuracy(input_list):
     plt.ylabel('Accuracy')
     plt.xlabel('#n')
     plt.title('Accuracy test')
-    plt.ylim(0.96, 0.972)  # limit y axis to see differences
+    plt.ylim(0.9, 0.972)  # limit y axis to see differences
     save_results()
     plt.show()
 
@@ -127,12 +127,13 @@ if __name__ == '__main__':
     # for testing purposes
 
     # load training and test images
-    training_lists = pickle.load_pickles("../data/training.dat")
-    test_lists = pickle.load_pickles("../data/test.dat")
-    print("Successfully loaded images from pickle files")
+    # training_lists = pickle.load_pickles("../data/training.dat")
+    # test_lists = pickle.load_pickles("../data/test.dat")
+    # print("Successfully loaded images from pickle files")
 
     # k_accuracy_test(1, 4)
     # plot_accuracy(pickle.load_pickles("k_accuracy2.dat"))
     # pca_variance_analysis(test_lists[1])
-    pca_accuracy_test(test_lists, training_lists)
+    # pca_accuracy_test(test_lists, training_lists)
     plot_accuracy(pickle.load_pickles("pca_accuracy.dat"))
+    print(pickle.load_pickles("pca_accuracy.dat"))
