@@ -45,11 +45,11 @@ def show_as_heatmap(mean_digits, median_digits):
 
 def get_best_digits(training_lists, test_lists):
 
-    # get list of a list of all probabilities that a certain image displays a certain digit
-    all_predictions = (KNN_sklearn.knn_sk_probabilities(test_lists, training_lists, 500))
-    pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
+    # # get list of a list of all probabilities that a certain image displays a certain digit
+    # all_predictions = (KNN_sklearn.knn_sk_probabilities(test_lists, training_lists, 500))
+    # pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
     # # --- run code above once to create the .dat then only run line below ----
-    # all_predictions = pickle_io.load_pickles("../data/skknnproba.dat")
+    all_predictions = pickle_io.load_pickles("../data/skknnproba.dat")
 
     # get labels of most clearly recognized images for each digit
     best_images = list()
@@ -83,14 +83,14 @@ def show_best_digits(training_images, test_images):
         plt.imshow(best_digits[2*i].reshape(28, 28),
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
-        plt.xlabel('Mean of all '+str(2*i)+"'s", fontsize=14)
+        plt.xlabel('Most clearly recognized '+str(2*i), fontsize=14)
 
         # right image - odd digit
         plt.subplot(5, 2, 2*i+2)
         plt.imshow(best_digits[2*i+1].reshape(28, 28),
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
-        plt.xlabel('Mean of all '+str(2*i+1)+"'s", fontsize=12)
+        plt.xlabel('Most clearly recognized '+str(2*i+1), fontsize=12)
     plt.show()
 
 
