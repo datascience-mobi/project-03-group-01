@@ -7,6 +7,7 @@ import numpy as np
 import src.image_operations as image_io
 import matplotlib.pyplot as plt
 import src.meta_digit_operations as meta_digit
+import src.knn_clustering as knn_clustering
 
 tests_count = 0
 tests_success = 0
@@ -56,3 +57,4 @@ if __name__ == '__main__':
     mean_digits = meta_digit.get_mean_digits(training_lists)
     median_digits = meta_digit.get_median_digits(training_lists)
     meta_digit.show_as_heatmap(mean_digits, median_digits)
+    knn_clustering.get_mispredictions(training_lists, test_lists)

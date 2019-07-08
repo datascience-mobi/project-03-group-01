@@ -24,7 +24,8 @@ def knn_sk(test_images, train_images, n_neighbours, min_index, max_index):
     knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit([csv_image.image for csv_image in train_images], [csv_image.label for csv_image in train_images])
     for j in range(min_index, max_index):
         test_pred.append([csv_image.image for csv_image in test_images][j])
-        print(j)
+        # print(j)
+    print("finished that loop")
     test_prediction = knn.predict(test_pred).tolist()
     test_prediction = [list(a) for a in zip([j for j in range(min_index, max_index)], test_prediction)]
     return test_prediction
