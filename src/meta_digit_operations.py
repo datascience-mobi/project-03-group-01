@@ -67,6 +67,13 @@ def get_mean_digits(training_images):
     return mean_digits
 
 
+def mean_center_distance(training_images, center):
+    center_distance = list()
+    for train in training_images:
+        center_distance.append(np.linalg.norm(train - center))
+    return np.mean(center_distance)
+
+
 def get_median_digits(training_images):
     median_digits = list()
     for i in range(10):

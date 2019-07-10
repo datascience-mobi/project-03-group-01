@@ -51,10 +51,30 @@ if __name__ == '__main__':
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from compressed pickle files")
 
-    meta_digit.show_mean_digits(training_lists)
-    meta_digit.show_median_digits(training_lists)
-    meta_digit.show_best_digits(training_lists, test_lists)
     mean_digits = meta_digit.get_mean_digits(training_lists)
     median_digits = meta_digit.get_median_digits(training_lists)
+
+    meta_digit.show_mean_digits(training_lists)
+    inner_distance = list()
+    for i in range(10):
+        inner_distance.append(meta_digit.mean_center_distance([train.image for train in training_lists if train.label == i], mean_digits[i]))
+    # min_dist_mean = 0
+    heat_list_mean = list()
+    for i in range(len(mean_digits)):
+        for j in range(len(mean_digits)):
+            dist = abs(meta_digit.mean_center_distance([train.image for train in training_lists if train.label == i], mean_digits[j]) - inner_distance[i])
+            # if dist < min_dist_mean and not dist == 0:
+            #     min_dist_mean = dist
+            heat_list_mean.append(dist)
+    min_dist_mean = min([heat for heat in heat_list_mean if not heat == 0])
+    max_dist_mean = max(heat_list_mean)
+    # a = np.random.random((16, 16))
+    heat_list_mean = np.asarray(heat_list_mean)
+    plt.imshow(heat_list_mean.reshape(10, 10), cmap='hot', interpolation='nearest')
+    plt.xlabel(f"Distances between digit clusters to others's center \n Min: {min_dist_mean} \n Max: {max_dist_mean} \n Diff: {min_dist_mean/max_dist_mean}")
+    plt.show()
+
+    meta_digit.show_median_digits(training_lists)
+    meta_digit.show_best_digits(training_lists, test_lists)
     meta_digit.show_as_heatmap(mean_digits, median_digits)
     knn_clustering.get_mispredictions(training_lists, test_lists)
