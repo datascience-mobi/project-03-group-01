@@ -2,6 +2,19 @@ from sklearn.decomposition import PCA
 from sklearn import preprocessing
 import src.image_operations as image_operations
 import numpy
+import matplotlib.pyplot as plt
+
+
+def plot_inverse_transforms(train_list, reduced_images, scaler):
+    # Invert pca for multiple values and draw the yielded images to one plot
+    for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):
+        image = increase_dimensions(train_list, [red[:i] for red in reduced_images], i, scaler)
+        plt.subplot(2, 4, idx+1)
+        plt.imshow(image.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"n(dim) = {i}", fontsize=14)
+    plt.show()
 
 
 def increase_dimensions(train_list, reduced_images, original_dimensions, scaler):

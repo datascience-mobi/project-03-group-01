@@ -32,16 +32,7 @@ if __name__ == '__main__':
     reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], 784)
     print("PCA finished successfully")
 
-    # Invert pca for multiple values and draw the yielded images to one plot
-    for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):
-        image = pca.increase_dimensions(reduced_images[2], [red[:i] for red in reduced_images[1]], i, reduced_images[3])
-        plt.subplot(2, 4, idx+1)
-        plt.imshow(image.reshape(28, 28),
-                   cmap=plt.cm.gray, interpolation='nearest',
-                   clim=(0, 255))
-        plt.xlabel(f"n(dim) = {i}", fontsize=14)
-    plt.show()
-
+    pca.plot_inverse_transforms(reduced_images[2], reduced_images[1], reduced_images[3])
     # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     for i in range(len(training_lists)):
         # print(len(training_lists[0][i].image)) # for debugging
