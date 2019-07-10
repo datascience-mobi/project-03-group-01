@@ -4,7 +4,7 @@ import src.image_operations as image_operations
 import numpy
 
 
-def increase_dimensions(train_list, reduced_images, original_dimensions):
+def increase_dimensions(train_list, reduced_images, original_dimensions, scaler):
     """
     Reconstructs visible 28×28 images from dimension reduced ones
     :param train_list: preprocessed training images -> no scaler object necessary
@@ -15,9 +15,9 @@ def increase_dimensions(train_list, reduced_images, original_dimensions):
     pca = PCA(n_components=original_dimensions)
     pca.fit(train_list)
     approximation = pca.inverse_transform(reduced_images)
+    approximation = scaler.inverse_transform(approximation)
     new_image = approximation[63]
     new_image = numpy.interp(new_image, (new_image.min(), new_image.max()), (0, 255))
-
     # # For debug: min and max values after scaling
     # print(min(new_image))
     # print("--")
@@ -60,4 +60,4 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     train_pca = pca.transform(train_list)
     test_pca = pca.transform(test_list)
 
-    return train_pca, test_pca, train_list
+    return train_pca, test_pca, train_list, scaler
