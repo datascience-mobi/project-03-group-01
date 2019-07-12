@@ -50,6 +50,7 @@ if __name__ == '__main__':
     # # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], 78)
     # print("PCA finished successfully")
+    print("Successfully loaded images from compressed pickle files")
 
     # # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     # for i in range(len(training_lists)):
@@ -70,6 +71,8 @@ if __name__ == '__main__':
     # training_lists = pickle_io.load_pickles("../data/red_training.dat")
     # test_lists = pickle_io.load_pickles("../data/red_test.dat")
     # print("Successfully loaded images from pickle files")
+    mean_digits = meta_digit.get_mean_digits(training_lists)
+    median_digits = meta_digit.get_median_digits(training_lists)
 
     # perform KNN for dimension reduced images (one test image)
     predicted_digit = knn.knn_digit_prediction(test_lists[7], training_lists, k)
@@ -78,3 +81,7 @@ if __name__ == '__main__':
     # performs pca_accuracy_test, then plots it
     # plot.pca_accuracy_test(test_lists, training_lists, 1)  # saves as pca_accuracy2 to avoid time wasted
     plot.plot_pca_accuracy(pickle_io.load_pickles("pca_accuracy.dat"))
+    meta_digit.show_mean_digits(training_lists)
+    meta_digit.show_median_digits(training_lists)
+    meta_digit.show_best_digits(training_lists, test_lists)
+    knn_clustering.get_mispredictions(training_lists, test_lists)
