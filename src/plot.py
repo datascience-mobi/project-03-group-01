@@ -11,7 +11,6 @@ def k_accuracy_test(k_min, k_max):
     # runs the knn-algorithm for different k-values
     # creates a list in the form of [[k1, accuracy1], [k2, accuracy2], ...]
     # then saves the list
-    # then plots the list
 
     k_accuracy = list()
     print("Started sklearn_k_value_test")
@@ -54,10 +53,10 @@ def pca_accuracy_test(test_lists, training_lists):
     pca_accuracy = list()
     n_steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100,
                 120, 140, 160, 180, 200, 250, 300, 350, 400, 500, 600, 700, 784]
-    n_steps2 = [75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86]
+    # n_steps2 = [75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86] for testing purposes
     # those dimensions were chosen for the pca
 
-    for n in n_steps2:
+    for n in n_steps:
         print(f"n = {n}")
         reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], n)
         all_images = 0

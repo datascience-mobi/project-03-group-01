@@ -2,7 +2,7 @@ import src.knn as knn
 import src.pca as pca
 import src.pickle_operations as pickle_io
 import matplotlib.pyplot as plt
-
+import src.plot as plot
 
 if __name__ == '__main__':
     # number of nearest neighbors to check
@@ -56,3 +56,15 @@ if __name__ == '__main__':
     # perform KNN for dimension reduced images (one test image)
     predicted_digit = knn.knn_digit_prediction(test_lists[7], training_lists, k)
     print("Predicted digit: " + str(predicted_digit) + " , expected result: " + str(test_lists[7].label))
+
+    # runs the k_accuracy test with 10000 images between the chosen k values (k_min, k_max) > then plots the result
+    plot.k_accuracy_test(1, 4)  # saves the result as k_accuracy2 to avoid time wasted
+    plot.plot_k_accuracy(pickle_io.load_pickles("k_accuracy.dat"))
+
+    # runs the pca_variance_analysis and plots it
+    plot.pca_variance_analysis(test_lists[1])
+
+    # performs pca_accuracy_test, then plots it
+    plot.pca_accuracy_test(test_lists, training_lists)  # saves as pca_accuracy2 to avoid time wasted
+    plot.plot_pca_accuracy(pickle_io.load_pickles("pca_accuracy.dat"))
+
