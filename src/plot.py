@@ -139,6 +139,27 @@ def plot_pca_variance(input_list):
     plt.show()
 
 
+def perfect_k_for_perfect_n(k_min, k_max, test_lists, training_lists):
+    perfect_k2 = list()
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists],
+                                           [csv_image.image for csv_image in test_lists], 78)
+    for k in range(k_min, k_max):
+        print(f"k = {k}")
+        success_number = 0
+        total_number = 0
+        prediction_list = KNN_sklearn.knn_sk(reduced_images[0], reduced_images[1],
+                                             [csv_image.label for csv_image in training_lists], k, 1, 10000)
+        for idx, prediction in enumerate(prediction_list):
+            total_number += 1
+            if prediction[1] == test_lists[prediction[0]].label:  # counts the number of correct predictions
+                success_number += 1
+        print(f"total number:{total_number}, success number:{success_number}")
+        accuracy = float(success_number) / float(total_number)  # calculates accuracy
+        perfect_k2.append([k, accuracy])
+    pickle.save_pickles(perfect_k2, "perfect_k2.dat")  # saves the list because it takes time
+    return perfect_k2
+
+
 if __name__ == '__main__':
     '''Whatever you do,DO NOT change k_accuracy.dat under any circumstances'''
     # for testing purposes
@@ -149,7 +170,10 @@ if __name__ == '__main__':
     print("Successfully loaded images from pickle files")
     # k_accuracy_test(1, 4)
     # plot_k_accuracy(pickle.load_pickles("k_accuracy.dat"))
-    # pca_variance_analysis(test_lists[1])
+    # pca_variance_analysis([csv_image.image for csv_image in test_lists])
     # pca_accuracy_test(test_lists, training_lists)
-    plot_pca_accuracy(pickle.load_pickles("pca_accuracy.dat"))
-    # print(pickle.load_pickles("pca_accuracy.dat2")
+    # plot_pca_accuracy(pickle.load_pickles("pca_accuracy.dat"))
+    # print(pickle.load_pickles("pca_accuracy.dat"))
+    # perfect_k_for_perfect_n(2, 6, test_lists, training_lists)
+    # plot_k_accuracy(pickle.load_pickles("perfect_k2.dat"))
+

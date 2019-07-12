@@ -62,7 +62,7 @@ if __name__ == '__main__':
     plot.plot_k_accuracy(pickle_io.load_pickles("k_accuracy.dat"))
 
     # runs the pca_variance_analysis and plots it
-    plot.pca_variance_analysis(test_lists[1])
+    plot.pca_variance_analysis([csv_image.image for csv_image in test_lists])
 
     # performs pca_accuracy_test, then plots it
     plot.pca_accuracy_test(test_lists, training_lists)  # saves as pca_accuracy2 to avoid time wasted
