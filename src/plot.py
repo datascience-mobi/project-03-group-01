@@ -41,7 +41,7 @@ def pca_variance_analysis(input_list):
     covar_matrix.fit(input_list)
     variance = covar_matrix.explained_variance_ratio_  # calculate variance ratios
     var = np.cumsum(np.round(variance, decimals=5) * 100)
-    print(var)  # cumulative sum of variance explained with [n] features
+    # print(var)  # cumulative sum of variance explained with [n] features
     plot_pca_variance(var)
 
 

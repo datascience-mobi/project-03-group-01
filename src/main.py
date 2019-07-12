@@ -38,6 +38,9 @@ if __name__ == '__main__':
     # runs the pca_variance_analysis and plots it
     plot.pca_variance_analysis([csv_image.image for csv_image in test_lists])
 
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], 100)
+    pca.plot_sample_reductions(reduced_images[2], training_lists, test_lists, reduced_images[0],  reduced_images[1], reduced_images[3], 100)
+
     # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists],
                                            [csv_image.image for csv_image in test_lists], 784)
