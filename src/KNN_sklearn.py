@@ -2,7 +2,25 @@ import sklearn
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import neighbors, metrics
 from src import load_image_vectors
+import matplotlib.pyplot as plt
+import numpy as np
 
+
+def plot_sample_recognitions(training_lists, test_lists):
+    pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], 3, 0, 10)
+    print(pred)
+    for i in range(5):
+        plt.subplot(2, 5, 2*i+1)
+        plt.imshow(np.asarray(test_lists[(2*i)].image).reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"prediction: {pred[2*i][1]}", fontsize=14)
+        plt.subplot(2, 5, 2*i + 2)
+        plt.imshow(np.asarray(test_lists[(2*i+1)].image).reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"prediction: {pred[2*i+1][1]}", fontsize=14)
+    plt.show()
 
 def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max_index):
     """

@@ -3,6 +3,7 @@ import src.pca as pca
 import src.pickle_operations as pickle_io
 import matplotlib.pyplot as plt
 import src.plot as plot
+from src import KNN_sklearn as knn_sklearn
 
 if __name__ == '__main__':
     # number of nearest neighbors to check
@@ -28,6 +29,7 @@ if __name__ == '__main__':
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from pickle files")
 
+    knn_sklearn.plot_sample_recognitions(training_lists, test_lists)
 
     # runs the k_accuracy test with 10000 images between the chosen k values (k_min, k_max) > then plots the result
     # plot.k_accuracy_test(training_lists, test_lists, 1, 4)  # saves the result as k_accuracy2 to avoid time wasted
@@ -45,8 +47,7 @@ if __name__ == '__main__':
     # # Get reduces training and test images as tuple - reduced_images[0] is train_list, [1] is test_list without digits
     reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], 78)
     # print("PCA finished successfully")
-    #
-    # pca.plot_inverse_transforms(reduced_images[2], reduced_images[1], reduced_images[3])
+
     # # Replace unreduced CsvImage vectors by reduced ones, for training and test images
     # for i in range(len(training_lists)):
     #     # print(len(training_lists[0][i].image)) # for debugging

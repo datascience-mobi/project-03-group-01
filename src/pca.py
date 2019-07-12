@@ -70,4 +70,4 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     train_pca = pca.transform(train_list)
     test_pca = pca.transform(test_list)
 
-    return train_pca, test_pca, train_list
+    return train_pca, test_pca, train_list, scaler

@@ -124,8 +124,8 @@ def plot_k_accuracy(input_list):
     plt.xticks(xs, labels)  # x-axis labeling
 
     plt.ylabel('Accuracy')
-    plt.xlabel('#k')
-    plt.title('Accuracy test')
+    plt.xlabel('k')
+    plt.title('Accuracy of various k values')
     plt.ylim(0.96, 0.975)  # limit y axis to see differences
     plt.show()
 
