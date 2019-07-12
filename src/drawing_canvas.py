@@ -23,7 +23,7 @@ def image_prepare(path) -> list:
     height = float(im.size[1])
 
     # creates white canvas of 28x28 pixels
-    new_image = Image.new('L', (28, 28), 255)
+    new_image = Image.new('L', (28, 28), 255, color=0)
 
     # check which dimension is bigger, redundant as long as canvas width = height -> Not tested
     if width > height:
@@ -38,13 +38,13 @@ def image_prepare(path) -> list:
         new_image.paste(img, (4, w_top))  # paste resized image on white canvas
     else:
         # TODO mnist image should have black margin instead of none?
-        # Height is bigger. height becomes 20 pixels. <- changed to 28 to remove white margin
-        new_width = int(round((28.0 / height * width), 0))  # resize width according to ratio height
+        # Height is bigger. height becomes 20 pixels.
+        new_width = int(round((20.0 / height * width), 0))  # resize width according to ratio height
         if new_width == 0:  # rare case but minimum is 1 pixel
             new_width = 1
             # resize and sharpen
-        img = im.resize((new_width, 28), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
-        w_left = int(round(((28 - new_width) / 2), 0))  # calculate vertical position TODO probably shifts pixels?
+        img = im.resize((new_width, 20), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        w_left = int(round(((20 - new_width) / 2), 0))  # calculate vertical position TODO probably shifts pixels?
         new_image.paste(img, (w_left, 0))  # paste resized image on white canvas
 
     # save mnist styled image to list
@@ -161,3 +161,4 @@ if __name__ == '__main__':
     random_digit = randint(0, 9)
     print(random_digit)
     y = drawn_image(random_digit)
+
