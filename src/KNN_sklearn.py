@@ -1,6 +1,7 @@
 import sklearn
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import neighbors, metrics
+from src import load_image_vectors
 
 
 def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max_index):
@@ -13,6 +14,7 @@ def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max
     :param max_index: lowest test image number NOT to perform the knn for
     :return: 2d list of type [[10, 0], [11, 6]] meaning [test image number, prediction]
     """
+
     test_pred = list()
     # define knn function using train data as a space for prediction
     # the function needs two lists: of data points in 784 dim. space and of their labels
