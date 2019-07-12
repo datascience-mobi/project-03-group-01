@@ -103,3 +103,8 @@ class CsvImage:
         self.image = list()
         for pixel in values[1:]:
             self.image.append(int(pixel))
+
+        self.prediction = -1
+
+    def set_prediction(self, prediction):
+        self.prediction = prediction
