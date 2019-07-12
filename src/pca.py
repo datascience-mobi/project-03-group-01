@@ -53,7 +53,6 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     :return: reduced input lists as tuple
     """
 
-
     scaler = preprocessing.StandardScaler()
 
     # Fit on training set only.
