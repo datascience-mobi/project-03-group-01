@@ -32,16 +32,16 @@ if __name__ == '__main__':
     k = 20
 
     # # TODO lists are currently a tuple of CsvImage Objects and the pure integer lists
-    # # load training and test images - only necessary once combined with saving as pickle
-    # training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-    # print("Successfully loaded training list")
-    # test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-    # print("Successfully loaded test list")
-    #
-    # # Save created CsvImage lists in pickle files
-    # pickle_io.save_pickles(training_lists, "../data/training.dat")
-    # pickle_io.save_pickles(test_lists, "../data/test.dat")
-    # print("Successfully compressed and stored pickles")
+    # load training and test images - only necessary once combined with saving as pickle
+    training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
+    print("Successfully loaded training list")
+    test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
+    print("Successfully loaded test list")
+
+    # Save created CsvImage lists in pickle files
+    pickle_io.save_pickles(training_lists, "../data/training.dat")
+    pickle_io.save_pickles(test_lists, "../data/test.dat")
+    print("Successfully compressed and stored pickles")
 
     # COMMENT OUT LINES ABOVE AFTER RUNNING ONCE, THEN ONLY RUN CODE BELOW
 
