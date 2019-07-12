@@ -43,7 +43,7 @@ def increase_dimensions(train_list, reduced_images, original_dimensions, scaler)
 
     return numpy.around(new_image)
 
-
+  
 def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     """
     Performs pca
@@ -52,9 +52,6 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     :param target_dimensions: number of dimensions to reduce to
     :return: reduced input lists as tuple
     """
-    test_index = 63
-
-    image_operations.draw(test_list[test_index])
 
     scaler = preprocessing.StandardScaler()
 
@@ -73,4 +70,4 @@ def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
     train_pca = pca.transform(train_list)
     test_pca = pca.transform(test_list)
 
-    return train_pca, test_pca, train_list, scaler
+    return train_pca, test_pca, train_list
