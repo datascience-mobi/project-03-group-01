@@ -4,6 +4,8 @@ import src.pickle_operations as pickle_io
 import matplotlib.pyplot as plt
 import src.plot as plot
 from src import KNN_sklearn as knn_sklearn
+from src import meta_digit_operations as meta_digit
+from src import knn_clustering
 
 if __name__ == '__main__':
     # number of nearest neighbors to check

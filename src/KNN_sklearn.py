@@ -40,6 +40,7 @@ def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max
     # they are written in addition .fit ()
     # n_neighbours defines how many neighbours we want to take while making prediction
     knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit(train_images, train_labels)
+    print("thingy initialized")
     # loop for prediction of only specific wanted digits between min_index and max_index-1
     # the actual points of test data set are extracted as test_pred
     for j in range(min_index, max_index):
