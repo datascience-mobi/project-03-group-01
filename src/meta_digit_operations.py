@@ -82,8 +82,7 @@ def get_median_digits(training_images):
     return median_digits
 
 
-def show_best_digits(training_images, test_images):
-    best_digits = np.asarray([csv_image.image for csv_image in get_best_digits(training_images, test_images)])
+def show_best_digits(training_images, test_images, best_digits):
     for i in range(5):
         # left image - even digit
         plt.subplot(5, 2, 2*i+1)
@@ -91,7 +90,6 @@ def show_best_digits(training_images, test_images):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel('Most clearly recognized '+str(2*i), fontsize=14)
-
         # right image - odd digit
         plt.subplot(5, 2, 2*i+2)
         plt.imshow(best_digits[2*i+1].reshape(28, 28),
