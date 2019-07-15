@@ -49,7 +49,7 @@ def get_best_digits(training_lists, test_lists):
     # all_predictions = (KNN_sklearn.knn_sk_probabilities(test_lists, training_lists, 500))
     # pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
     # # --- run code above once to create the .dat then only run line below ----
-    all_predictions = pickle_io.load_pickles("../data/skknnproba.dat")
+    all_predictions = pickle_io.load_pickles("data/skknnproba.dat")
 
     # get labels of most clearly recognized images for each digit
     best_images = list()

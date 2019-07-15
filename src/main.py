@@ -11,7 +11,7 @@ import numpy as np
 
 if __name__ == '__main__':
     # number of nearest neighbors to check
-    k = 20
+    # k = 20
 
     # # TODO lists are currently a tuple of CsvImage Objects and the pure integer lists
     # # load training and test images - only necessary once combined with saving as pickle
