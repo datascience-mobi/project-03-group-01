@@ -50,8 +50,8 @@ def show_wrong_predicted(train_images, test_images, best_digits):
     plt.show()
 
 
-def plot_sample_recognitions(training_lists, test_lists):
-    pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], 3, 0, 10)
+def plot_sample_recognitions(training_lists, test_lists, k):
+    pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 0, 10)
     print(pred)
     for i in range(10):
         new_line = (-1)**i*'\n'
@@ -80,7 +80,6 @@ def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max
     # they are written in addition .fit ()
     # n_neighbours defines how many neighbours we want to take while making prediction
     knn = sklearn.neighbors.KNeighborsClassifier(n_neighbors=n_neighbours).fit(train_images, train_labels)
-    print("thingy initialized")
     # loop for prediction of only specific wanted digits between min_index and max_index-1
     # the actual points of test data set are extracted as test_pred
     for j in range(min_index, max_index):
