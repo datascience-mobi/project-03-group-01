@@ -60,7 +60,7 @@ if __name__ == '__main__':
     random_digit = randint(0, 9)
     print(random_digit)
     # test_vector = drawing_canvas.drawn_image(random_digit)
-    test_vector = drawing_canvas.image_prepare("mnist.png")
+    test_vector = drawing_canvas.image_prepare_old("mnist.png")
 
     # insert label to fit test_vector for CsvImage class
     test_vector.insert(0, -1)

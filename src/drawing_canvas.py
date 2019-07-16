@@ -10,6 +10,48 @@
 import image_operations
 from PIL import Image, ImageFilter
 
+def image_prepare_old(path) -> list:
+    """
+    transforms input image as mnist compatible intensity list
+    :param path: image path
+    :return: transformed image as list
+    """
+    # open input image from path
+    im = Image.open(path).convert('L')
+    width = float(im.size[0])
+    height = float(im.size[1])
+
+    # creates white canvas of 28x28 pixels
+    new_image = Image.new('L', (28, 28), 255)
+
+    # check which dimension is bigger, redundant as long as canvas width = height -> Not tested
+    if width > height:
+        # Width is bigger. Width becomes 20 pixels.
+        new_height = int(round((20.0 / width * height), 0))  # resize height according to ratio width
+        if new_height == 0:  # rare case but minimum is 1 pixel
+            new_height = 1
+
+        # resize and sharpen
+        img = im.resize((20, new_height), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        w_top = int(round(((28 - new_height) / 2), 0))  # calculate horizontal position
+        new_image.paste(img, (4, w_top))  # paste resized image on white canvas
+    else:
+        # TODO mnist image should have black margin instead of none?
+        # Height is bigger. height becomes 20 pixels. <- changed to 28 to remove white margin
+        new_width = int(round((28.0 / height * width), 0))  # resize width according to ratio height
+        if new_width == 0:  # rare case but minimum is 1 pixel
+            new_width = 1
+            # resize and sharpen
+        img = im.resize((new_width, 28), Image.ANTIALIAS).filter(ImageFilter.SHARPEN)
+        w_left = int(round(((28 - new_width) / 2), 0))  # calculate vertical position TODO probably shifts pixels?
+        new_image.paste(img, (w_left, 0))  # paste resized image on white canvas
+
+    # save mnist styled image to list
+    mnist_image = list(new_image.getdata())  # get pixel values
+
+    print(mnist_image)
+    return mnist_image
+
 
 def image_prepare(path) -> list:
     """
