@@ -28,7 +28,7 @@ def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, r
 def plot_inverse_transforms(train_list, reduced_images, scaler):
     # Invert pca for multiple values and draw the yielded images to one plot
     for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):
-        image = increase_dimensions(train_list, [red[:i] for red in reduced_images], i, scaler, 84)
+        image = increase_dimensions(train_list, [red[:i] for red in reduced_images], i, scaler, 87)
         plt.subplot(2, 4, idx+1)
         plt.imshow(image.reshape(28, 28),
                    cmap=plt.cm.gray, interpolation='nearest',
