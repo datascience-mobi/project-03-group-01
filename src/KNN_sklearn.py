@@ -23,7 +23,7 @@ def show_wrong_predicted(train_images, test_images, best_digits):
     print(test_predictions[:20])
     count = 0
     for i in range(len(test_predictions)):
-        if test_images[test_predictions[i][0]].label != test_predictions[i][1]:
+        if test_images[test_predictions[i][0]].label != test_predictions[i][1] and test_images[test_predictions[i][0]].label == 7:
             # image_operations.draw(test_images[test_predictions[i][0]].image)
             plt.subplot(5, 3, 3 * count + 1)
             print(3 * count + 1)
