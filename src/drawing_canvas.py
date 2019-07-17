@@ -190,7 +190,7 @@ def drawn_image(digit) -> list:
     x = image_prepare('test.png')  # path must fit path in MyPaintWidget.on_keyboard_down
 
     # show and save mnist style input image
-    image_operations.draw(x)
+    # image_operations.draw(x)
     image_operations.save("mnist.png", x)
 
     # Control: does mnist style image actually fit mnist size?

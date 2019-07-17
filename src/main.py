@@ -11,23 +11,6 @@ import src.meta_digit_operations as meta_digit
 import src.digit_evaluation as digit_evaluation
 import numpy as np
 
-tests_count = 0
-tests_success = 0
-
-
-def set_success_rate(prediction, test_image) -> None:
-    global tests_count, tests_success
-    if prediction == test_image.label:
-        tests_success += 1
-    tests_count += 1
-    return None
-
-
-def get_success_rate():
-    global tests_count, tests_success
-    success = float(tests_success)/float(tests_count)
-    return round(success, 4)
-
 
 if __name__ == '__main__':
     # number of nearest neighbors to check
@@ -56,22 +39,27 @@ if __name__ == '__main__':
     # optionally save reference image for later inspection
     # image_operations.save('../fname.png', test_list[1].image)
 
-    # get drawn image, adjusted for mnist
-    random_digit = randint(0, 9)
-    print(random_digit)
-    test_vector = drawing_canvas.drawn_image(random_digit)
-    # test_vector = drawing_canvas.image_prepare_old("mnist.png")
+    while True:
+        # get drawn image, adjusted for mnist
+        random_digit = randint(0, 9)
+        print(random_digit)
 
-    # insert label to fit test_vector for CsvImage class
-    test_vector.insert(0, -1)
+        test_vector = drawing_canvas.drawn_image(random_digit)
+        if all([v == 0 for v in test_vector]):
+            break
 
-    # Creates CsvImage object for drawn test image
-    test = load_image_vectors.CsvImage(test_vector, is_list=True)
+        # test_vector = drawing_canvas.image_prepare_old("mnist.png")
 
-    # perform KNN
-    predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
-    print(predicted_digit)
+        # insert label to fit test_vector for CsvImage class
+        test_vector.insert(0, -1)
 
-    best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
-    evaluation = -1
-    digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
+        # Creates CsvImage object for drawn test image
+        test = load_image_vectors.CsvImage(test_vector, is_list=True)
+
+        # perform KNN
+        predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
+        print(predicted_digit)
+
+        best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
+        evaluation = -1
+        digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
