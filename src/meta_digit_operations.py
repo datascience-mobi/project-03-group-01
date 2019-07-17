@@ -123,7 +123,7 @@ def show_median_digits(training_images):
         plt.subplot(5, 2, 2*i+1)
         plt.imshow(median_digits[2*i].reshape(28, 28),
                    cmap=plt.cm.gray, interpolation='nearest',
-                   clim=(0, 255))
+                   clim=(0, 255), aspect="auto")
         plt.xlabel('Median of all '+str(2*i)+"'s", fontsize=14)
 
         plt.subplot(5, 2, 2*i+2)
