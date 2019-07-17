@@ -152,7 +152,6 @@ def get_most_unique_image(predictions, label, test_images) -> int:
     # max_label is the index within all images of the same label,
     # thus the index within test_images needs to be determined
     best_index = get_total_index(test_images, label, max_label)
-    print(f"max_accuracy: {max_accuracy}, max_label: {max_label}, true label: {best_index}")
 
     return best_index
 
