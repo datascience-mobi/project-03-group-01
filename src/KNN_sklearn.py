@@ -127,7 +127,6 @@ def get_total_index(image_list, digit, local_index) -> int:
             j += 1
         if j == local_index:
             # directly end the loop as soon as the total index was found
-            print(f"success: i = {i}")
             return i
 
 
