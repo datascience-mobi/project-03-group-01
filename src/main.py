@@ -72,16 +72,6 @@ if __name__ == '__main__':
     predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
     print(predicted_digit)
 
-    mean_digits = meta_digit.get_mean_digits(training_lists)
-    median_digits = meta_digit.get_median_digits(training_lists)
-
-    mean_distance = list()
-    for digit in mean_digits:
-        mean_distance.append(distance.euclidean(digit, test.image))
-
-    median_distance = list()
-    for digit in median_digits:
-        median_distance.append(distance.euclidean(digit, test.image))
-
-    digit_evaluation.plot_grouped_distances(mean_distance, median_distance, False)
-    digit_evaluation.show_difference(np.asarray(test.image), random_digit, mean_digits[random_digit], median_digits[random_digit])
+    best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
+    evaluation = -1
+    digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
