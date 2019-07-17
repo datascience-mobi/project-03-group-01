@@ -11,7 +11,7 @@ def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, r
     for i in range(4):
         images.append(increase_dimensions(train_list, reduced_images, original_dimensions, scaler, i))
     pred = knn_sklearn.knn_sk(reduced_train, reduced_images, [csv_image.label for csv_image in raw_training], 3, 0, 4)
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(5, 10))
     for i in range(4):
         plt.subplot(4, 2, 2 * i + 1)
         plt.imshow(np.asarray(test_list[i].image).reshape(28, 28),
