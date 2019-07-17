@@ -50,7 +50,7 @@ def plot_sample_recognitions(training_lists, test_lists, k):
     pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 0, 10)
     plt.figure(figsize=(10, 5))
     for i in range(10):
-        new_line = (-1)**i*'\n'
+        new_line = '\n'
         plt.subplot(2, 5, i+1)
         plt.imshow(np.asarray(test_lists[i].image).reshape(28, 28),
                    cmap=plt.cm.gray, interpolation='nearest',
