@@ -11,6 +11,7 @@ def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, r
     for i in range(4):
         images.append(increase_dimensions(train_list, reduced_images, original_dimensions, scaler, i))
     pred = knn_sklearn.knn_sk(reduced_train, reduced_images, [csv_image.label for csv_image in raw_training], 3, 0, 4)
+    plt.figure(figsize=(10, 20))
     for i in range(4):
         plt.subplot(4, 2, 2 * i + 1)
         plt.imshow(np.asarray(test_list[i].image).reshape(28, 28),
@@ -22,11 +23,13 @@ def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, r
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel(f"Reduced image \n prediction: {pred[i][1]}", fontsize=14)
+    plt.tight_layout()
     plt.show()
 
 
 def plot_inverse_transforms(train_list, reduced_images, scaler):
     # Invert pca for multiple values and draw the yielded images to one plot
+    plt.figure(figsize=(10, 20))
     for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):
         image = increase_dimensions(train_list, [red[:i] for red in reduced_images], i, scaler, 87)
         plt.subplot(2, 4, idx+1)
@@ -34,6 +37,7 @@ def plot_inverse_transforms(train_list, reduced_images, scaler):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel(f"n(dim) = {i}", fontsize=14)
+    plt.tight_layout()
     plt.show()
 
 

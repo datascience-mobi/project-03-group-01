@@ -82,6 +82,7 @@ def get_median_digits(training_images):
 
 
 def show_best_digits(training_images, test_images, best_digits):
+    plt.figure(figsize=(10, 20))
     for i in range(5):
         # left image - even digit
         plt.subplot(5, 2, 2*i+1)
@@ -95,11 +96,13 @@ def show_best_digits(training_images, test_images, best_digits):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel('Most clearly recognized '+str(2*i+1), fontsize=12)
+    plt.tight_layout()
     plt.show()
 
 
 def show_mean_digits(training_images):
     mean_digits = get_mean_digits(training_images)
+    plt.figure(figsize=(10, 20))
     for i in range(5):
         # left image - even digit
         plt.subplot(5, 2, 2*i+1)
@@ -114,6 +117,7 @@ def show_mean_digits(training_images):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel('Mean of all '+str(2*i+1)+"'s", fontsize=12)
+    plt.tight_layout()
     plt.show()
 
 

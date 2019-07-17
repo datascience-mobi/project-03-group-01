@@ -20,6 +20,7 @@ def show_wrong_predicted(train_images, test_images, best_digits):
 
     test_predictions = KNN_sklearn.knn_sk(reds[0], reds[1], [csv_image.label for csv_image in train_images], 3, 0, 10000)
     count = 0
+    plt.figure(figsize=(10, 20))
     for i in range(len(test_predictions)):
         if test_images[test_predictions[i][0]].label != test_predictions[i][1] and test_images[test_predictions[i][0]].label == 7:
             # image_operations.draw(test_images[test_predictions[i][0]].image)
@@ -41,11 +42,13 @@ def show_wrong_predicted(train_images, test_images, best_digits):
             count += 1
             if count > 4:
                 break
+    plt.figure(figsize=(10, 20))
     plt.show()
 
 
 def plot_sample_recognitions(training_lists, test_lists, k):
     pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 0, 10)
+    plt.figure(figsize=(10, 20))
     for i in range(10):
         new_line = (-1)**i*'\n'
         plt.subplot(2, 5, i+1)
@@ -53,6 +56,7 @@ def plot_sample_recognitions(training_lists, test_lists, k):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel(f"{new_line}prediction: {pred[i][1]}", fontsize=14)
+    plt.tight_layout()
     plt.show()
 
 
