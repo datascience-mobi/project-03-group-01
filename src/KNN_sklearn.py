@@ -20,7 +20,7 @@ def show_wrong_predicted(train_images, test_images, best_digits):
 
     test_predictions = KNN_sklearn.knn_sk(reds[0], reds[1], [csv_image.label for csv_image in train_images], 3, 0, 10000)
     count = 0
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(5, 10))
     for i in range(len(test_predictions)):
         if test_images[test_predictions[i][0]].label != test_predictions[i][1] and test_images[test_predictions[i][0]].label == 7:
             # image_operations.draw(test_images[test_predictions[i][0]].image)
