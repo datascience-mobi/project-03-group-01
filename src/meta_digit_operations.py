@@ -131,4 +131,5 @@ def show_median_digits(training_images):
                    cmap=plt.cm.gray, interpolation='nearest',
                    clim=(0, 255))
         plt.xlabel('Median of all '+str(2*i+1)+"'s", fontsize=12)
+    plt.tight_layout()
     plt.show()
