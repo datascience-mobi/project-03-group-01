@@ -17,7 +17,9 @@ def k_accuracy_test(train_list, test_list, k_min, k_max):
     for k in range(k_min, k_max):
         success_number = 0
         total_number = 0
-        prediction_list = KNN_sklearn.knn_sk([csv_image.image for csv_image in train_list], [csv_image.image for csv_image in test_list], [csv_image.label for csv_image in train_list], k, 1, 5)
+        prediction_list = KNN_sklearn.knn_sk([csv_image.image for csv_image in train_list],
+                                             [csv_image.image for csv_image in test_list],
+                                             [csv_image.label for csv_image in train_list], k, 1, 10000)
         for idx, prediction in enumerate(prediction_list):
             total_number += 1
             if prediction[1] == test_list[prediction[0]].label:  # counts the number of correct predictions
@@ -27,7 +29,8 @@ def k_accuracy_test(train_list, test_list, k_min, k_max):
         k_accuracy.append([k, accuracy])
         print("Finished accuracy calculation " + str(k))
     print('k_accuracy = ', k_accuracy)
-    pickle.save_pickles(k_accuracy, "k_accuracy2.dat")  # saves the list because it takes a lot of time
+    plot_k_accuracy(k_accuracy)
+    # pickle.save_pickles(k_accuracy, "k_accuracy2.dat")  # saves the list because it takes a lot of time
     return k_accuracy
 
 
@@ -61,10 +64,12 @@ def pca_accuracy_test(test_lists, training_lists, steps):
 
     for n in n_steps:
         print(f"n = {n}")
-        reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], n)
+        reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in training_lists],
+                                               [csv_image.image for csv_image in test_lists], n)
         all_images = 0
         success_images = 0
-        prediction_list = KNN_sklearn.knn_sk(reduced_images[0], reduced_images[1], [csv_image.label for csv_image in training_lists], 3, 1, 10000)
+        prediction_list = KNN_sklearn.knn_sk(reduced_images[0], reduced_images[1],
+                                             [csv_image.label for csv_image in training_lists], 3, 1, 10000)
         for idx, prediction in enumerate(prediction_list):
             all_images += 1
             if prediction[1] == test_lists[prediction[0]].label:  # this counts the correctly recognized images
@@ -73,7 +78,8 @@ def pca_accuracy_test(test_lists, training_lists, steps):
         pca_accuracy.append([n, accuracy])
         print("Finished accuracy calculation " + str(n))
     print('pca_accuracy = ', pca_accuracy)
-    pickle.save_pickles(pca_accuracy, f"pca_accuracy_gen{steps}.dat")  # saves the list because it takes time
+    plot_pca_accuracy(pca_accuracy)
+    # pickle.save_pickles(pca_accuracy, f"pca_accuracy_gen{steps}.dat")  # saves the list because it takes time
     return pca_accuracy
 
 
