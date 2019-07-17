@@ -54,7 +54,6 @@ def get_best_digits(training_lists, test_lists):
     # get labels of most clearly recognized images for each digit
     best_images = list()
     for i in range(10):
-        print(f"i: {i}")
         best_images.append(test_lists[KNN_sklearn.get_most_unique_image(all_predictions[i], i, test_lists)])
     return best_images
 
