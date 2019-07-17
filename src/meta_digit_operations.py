@@ -82,7 +82,7 @@ def get_median_digits(training_images):
 
 
 def show_best_digits(training_images, test_images, best_digits):
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(5, 10))
     for i in range(5):
         # left image - even digit
         plt.subplot(5, 2, 2*i+1)
@@ -102,7 +102,7 @@ def show_best_digits(training_images, test_images, best_digits):
 
 def show_mean_digits(training_images):
     mean_digits = get_mean_digits(training_images)
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(5, 10))
     for i in range(5):
         # left image - even digit
         plt.subplot(5, 2, 2*i+1)
@@ -123,7 +123,7 @@ def show_mean_digits(training_images):
 
 def show_median_digits(training_images):
     median_digits = get_median_digits(training_images)
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(5, 10))
     for i in range(5):
         plt.subplot(5, 2, 2*i+1)
         plt.imshow(median_digits[2*i].reshape(28, 28),
