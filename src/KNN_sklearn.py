@@ -48,7 +48,7 @@ def show_wrong_predicted(train_images, test_images, best_digits):
 
 def plot_sample_recognitions(training_lists, test_lists, k):
     pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 0, 10)
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(10, 5))
     for i in range(10):
         new_line = (-1)**i*'\n'
         plt.subplot(2, 5, i+1)
