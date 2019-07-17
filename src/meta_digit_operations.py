@@ -132,4 +132,5 @@ def show_median_digits(training_images):
                    clim=(0, 255))
         plt.xlabel('Median of all '+str(2*i+1)+"'s", fontsize=12)
     plt.tight_layout()
+    plt.figure(figsize=(10, 20))
     plt.show()
