@@ -67,7 +67,6 @@ def get_image_object_list(data_list) -> list:
         image = CsvImage(data)
         image_list.append(image)
 
-    print(len(image_list))
     return image_list
 
 
