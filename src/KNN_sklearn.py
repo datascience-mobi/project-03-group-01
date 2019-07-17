@@ -42,7 +42,7 @@ def show_wrong_predicted(train_images, test_images, best_digits):
             count += 1
             if count > 4:
                 break
-    plt.figure(figsize=(10, 20))
+    plt.tight_layout()
     plt.show()
 
 
