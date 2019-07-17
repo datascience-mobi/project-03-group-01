@@ -19,31 +19,25 @@ def show_wrong_predicted(train_images, test_images, best_digits):
     reds = pca.reduce_dimensions([csv_image.image for csv_image in train_images], [csv_image.image for csv_image in test_images], 78)
 
     test_predictions = KNN_sklearn.knn_sk(reds[0], reds[1], [csv_image.label for csv_image in train_images], 3, 0, 10000)
-    print("here")
-    print(test_predictions[:20])
     count = 0
     for i in range(len(test_predictions)):
         if test_images[test_predictions[i][0]].label != test_predictions[i][1] and test_images[test_predictions[i][0]].label == 7:
             # image_operations.draw(test_images[test_predictions[i][0]].image)
             plt.subplot(5, 3, 3 * count + 1)
-            print(3 * count + 1)
             plt.imshow(np.asarray(test_images[test_predictions[i][0]].image).reshape(28, 28),
                        cmap=plt.cm.gray, interpolation='nearest',
                        clim=(0, 255))
             plt.xlabel(f"prediction: {test_predictions[i][1]}", fontsize=14)
-            print(3 * count + 2)
             plt.subplot(5, 3, 3 * count + 2)
             plt.imshow(np.asarray(best_digits[test_images[test_predictions[i][0]].label].reshape(28, 28)),
                        cmap=plt.cm.gray, interpolation='nearest',
                        clim=(0, 255))
             plt.xlabel(f"Best recognized {test_images[test_predictions[i][0]].label}", fontsize=14)
             plt.subplot(5, 3, 3 * count + 3)
-            print(32 * count + 3)
             plt.imshow(np.asarray(best_digits[test_predictions[i][1]].reshape(28, 28)),
                        cmap=plt.cm.gray, interpolation='nearest',
                        clim=(0, 255))
             plt.xlabel(f"Best recognized {test_predictions[i][1]}", fontsize=14)
-            print("here2")
             count += 1
             if count > 4:
                 break
