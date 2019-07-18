@@ -1,13 +1,19 @@
 from scipy.spatial import distance
 from src import load_image_vectors
-from src import meta_digit_operations as mdo
-from src import KNN_sklearn
+
 import numpy as np
 from src import pickle_operations as pickle_io
+from src import digit_evaluation as mdo
 import random
 
 
-def get_sorted_distances(meta_digit, training_list, meta_digit_label) -> list:
+def get_sorted_distances_from_testpool_to_meta(meta_digit, training_list, meta_digit_label) -> list:
+    """
+    :param meta_digit:
+    :param training_list: list of 60000 csv images (test pool)
+    :param meta_digit_label:
+    :return:
+    """
     # Scipy function calculating the euclidean distance between the test image and all training images
     distance_list = list()
     for training in training_list:
@@ -35,29 +41,39 @@ def get_distance_from_handwritten_to_meta(hand_written_digit, meta_digit):
     return dist
 
 
-def procentile_of_handwritten_digit(distance_between_handwritten_and_meta, sorted_distances_from_meta):
+def percentile_of_handwritten_digit(distance_between_handwritten_and_meta, sorted_distances_from_meta):
+    """
+    Function prints the evaluation dependent on the percentile of hand written digit.
+    :param distance_between_handwritten_and_meta:
+    :param sorted_distances_from_meta:
+    :return: percentile
+    """
     for i in range(len(sorted_distances_from_meta)):
         if sorted_distances_from_meta[i] > distance_between_handwritten_and_meta:
             percent = round(((len(sorted_distances_from_meta) - i) / len(sorted_distances_from_meta) * 100), 3)
             break
     print("your written digit is closer to the most recognisable digit than", percent, "% of digits from our database")
     if percent < 30:
-        print("you could do better")
+        evaluation_feedback = "you could do better"
+        # print("you could do better")
     elif percent < 80:
-        print("is recognisable, you did fine")
+        evaluation_feedback = "is recognisable, you did fine"
+        # print("is recognisable, you did fine")
     else:
-        print("really well-done (written)")
+        evaluation_feedback = "really well-done (written)"
+        # print("really well-done (written)")
+        return [percent, evaluation_feedback]
 
 
 # load training and test images
-training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
-print("Successfully loaded training list")
-test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
-print("Successfully loaded test list")
+# training_lists = load_image_vectors.load_gz('../data/mnist_train.csv.gz')
+# print("Successfully loaded training list")
+# test_lists = load_image_vectors.load_gz('../data/mnist_test.csv.gz')
+# print("Successfully loaded test list")
 
-pickle_io.save_pickles(training_lists, "../data/training.dat")
-pickle_io.save_pickles(test_lists, "../data/test.dat")
-print("Successfully compressed and stored pickles")
+# pickle_io.save_pickles(training_lists, "../data/training.dat")
+# pickle_io.save_pickles(test_lists, "../data/test.dat")
+# print("Successfully compressed and stored pickles")
 
 training_lists = pickle_io.load_pickles("../data/training.dat")
 test_lists = pickle_io.load_pickles("../data/test.dat")
@@ -76,7 +92,7 @@ average_for_every_digit_best = list()
 
 # calculating the average squared distances for median digit
 for i in range(10):
-    distances_for_sum = get_sorted_distances(median_digit[i], training_lists, i)
+    distances_for_sum = get_sorted_distances_from_testpool_to_meta(median_digit[i], training_lists, i)
     sum_of_distances = sum(distances_for_sum)
     # for j in range(len(distances_for_sum)-1):
     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
@@ -86,7 +102,7 @@ print(average_for_every_digit_median)
 
 # calculating the average squared distances for mean digit
 for i in range(10):
-    distances_for_sum = get_sorted_distances(mean_digit[i], training_lists, i)
+    distances_for_sum = get_sorted_distances_from_testpool_to_meta(mean_digit[i], training_lists, i)
     sum_of_distances = sum(distances_for_sum)
     # for j in range(len(distances_for_sum)-1):
     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
@@ -96,7 +112,7 @@ print(average_for_every_digit_mean)
 
 # calculating the average squared distances for best digit
 for i in range(10):
-    distances_for_sum = get_sorted_distances(best_digit[i].image, training_lists, i)
+    distances_for_sum = get_sorted_distances_from_testpool_to_meta(best_digit[i].image, training_lists, i)
     sum_of_distances = sum(distances_for_sum)
     # for j in range(len(distances_for_sum)-1):
     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
@@ -106,5 +122,6 @@ print(average_for_every_digit_best)
 
 written_digit = getting_random_digit_from_test_pool(test_lists, 0)
 distance_btw_handwritten_and_meta = get_distance_from_handwritten_to_meta(written_digit.image, best_digit[0].image)
-sorted_distances_from_meta = get_sorted_distances(best_digit[0].image, training_lists, 0)
-procentile_of_handwritten_digit(distance_btw_handwritten_and_meta, sorted_distances_from_meta)
+sorted_distances_from_meta = get_sorted_distances_from_testpool_to_meta(best_digit[0].image, training_lists, 0)
+evaluation = percentile_of_handwritten_digit(distance_btw_handwritten_and_meta, sorted_distances_from_meta)
+print(evaluation)

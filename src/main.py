@@ -10,7 +10,7 @@ import src.image_operations as image_io
 import src.meta_digit_operations as meta_digit
 import src.digit_evaluation as digit_evaluation
 import numpy as np
-
+import src.evaluation_of_hand_written_digit as evaluation_of_hw_digit
 
 if __name__ == '__main__':
     # number of nearest neighbors to check
@@ -63,3 +63,15 @@ if __name__ == '__main__':
         best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
         evaluation = -1
         digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
+
+        distance_btw_handwritten_and_meta = evaluation_of_hw_digit.get_distance_from_handwritten_to_meta(test.image,
+                                                                                                         best_digit[
+                                                                                                             predicted_digit].image)
+        # get the sorted list of distances.
+        # if you want to evaluate comparing to the trainpool, just change trainings_list to test_lists in the row below
+        sorted_distances_from_meta = evaluation_of_hw_digit.get_sorted_distances_from_testpool_to_meta(
+            best_digit[predicted_digit].image, training_lists, predicted_digit)
+        # Function prints the evaluation dependent on the percentile of hand written digit. returns nothing
+        # can be uncommented - will return the percentile[0] and feedback[1] as tuple.
+        evaluation_of_hw_digit.percentile_of_handwritten_digit(distance_btw_handwritten_and_meta,
+                                                               sorted_distances_from_meta)
