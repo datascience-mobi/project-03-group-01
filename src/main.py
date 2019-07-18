@@ -39,27 +39,28 @@ if __name__ == '__main__':
     # optionally save reference image for later inspection
     # image_operations.save('../fname.png', test_list[1].image)
 
-    while True:
-        # get drawn image, adjusted for mnist
-        random_digit = randint(0, 9)
-        print(random_digit)
+    # while True:
+    # get drawn image, adjusted for mnist
+    # random_digit = randint(0, 9)
+    random_digit = 4
+    print(random_digit)
 
-        test_vector = drawing_canvas.drawn_image(random_digit)
-        if all([v == 0 for v in test_vector]):
-            break
+    # test_vector = drawing_canvas.drawn_image(random_digit)
+    # if all([v == 0 for v in test_vector]):
+    #     break
 
-        # test_vector = drawing_canvas.image_prepare_old("mnist.png")
+    test_vector = drawing_canvas.image_prepare("mnist.png")
 
-        # insert label to fit test_vector for CsvImage class
-        test_vector.insert(0, -1)
+    # insert label to fit test_vector for CsvImage class
+    test_vector.insert(0, -1)
 
-        # Creates CsvImage object for drawn test image
-        test = load_image_vectors.CsvImage(test_vector, is_list=True)
+    # Creates CsvImage object for drawn test image
+    test = load_image_vectors.CsvImage(test_vector, is_list=True)
 
-        # perform KNN
-        predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
-        print(predicted_digit)
+    # perform KNN
+    predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
+    print(predicted_digit)
 
-        best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
-        evaluation = -1
-        digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
+    best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
+    evaluation = -1
+    digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)
