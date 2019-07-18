@@ -62,7 +62,7 @@ def percentile_of_handwritten_digit(distance_between_handwritten_and_meta, sorte
     else:
         evaluation_feedback = "really well-done (written)"
         # print("really well-done (written)")
-        return [percent, evaluation_feedback]
+    return [percent, evaluation_feedback]
 
 
 # load training and test images
@@ -75,53 +75,59 @@ def percentile_of_handwritten_digit(distance_between_handwritten_and_meta, sorte
 # pickle_io.save_pickles(test_lists, "../data/test.dat")
 # print("Successfully compressed and stored pickles")
 
-training_lists = pickle_io.load_pickles("../data/training.dat")
-test_lists = pickle_io.load_pickles("../data/test.dat")
-print("Successfully loaded images from compressed pickle files")
+# training_lists = pickle_io.load_pickles("../data/training.dat")
+# test_lists = pickle_io.load_pickles("../data/test.dat")
+# print("Successfully loaded images from compressed pickle files")
+#
+# # average square distance between metadigits and all elements with the same label
+# median_digit = mdo.get_median_digits(training_lists)
+# mean_digit = mdo.get_mean_digits(training_lists)
+# best_digit = mdo.get_best_digits(training_lists, test_lists)
+# distance_sum = list()
+# distance_average = list()
+# sum_of_distances = float
+# average_for_every_digit_median = list()
+# average_for_every_digit_mean = list()
+# average_for_every_digit_best = list()
+#
+# # calculating the average squared distances for median digit
+# for i in range(10):
+#     distances_for_sum = get_sorted_distances_from_testpool_to_meta(median_digit[i], training_lists, i)
+#     sum_of_distances = sum(distances_for_sum)
+#     # for j in range(len(distances_for_sum)-1):
+#     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
+#     average_for_every_digit_median.append(sum_of_distances / len(distances_for_sum))
+# print("average distances to the median digit")
+# print(average_for_every_digit_median)
+#
+# # calculating the average squared distances for mean digit
+# for i in range(10):
+#     distances_for_sum = get_sorted_distances_from_testpool_to_meta(mean_digit[i], training_lists, i)
+#     sum_of_distances = sum(distances_for_sum)
+#     # for j in range(len(distances_for_sum)-1):
+#     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
+#     average_for_every_digit_mean.append(sum_of_distances / len(distances_for_sum))
+# print("average distances to the mean digit")
+# print(average_for_every_digit_mean)
+#
+# # calculating the average squared distances for best digit
+# for i in range(10):
+#     distances_for_sum = get_sorted_distances_from_testpool_to_meta(best_digit[i].image, training_lists, i)
+#     sum_of_distances = sum(distances_for_sum)
+#     # for j in range(len(distances_for_sum)-1):
+#     #     sum_of_distances = sum_of_distances + distances_for_sum[j]
+#     average_for_every_digit_best.append(sum_of_distances / len(distances_for_sum))
+# print("average distances to the best digit")
+# print(average_for_every_digit_best)
 
-# average square distance between metadigits and all elements with the same label
-median_digit = mdo.get_median_digits(training_lists)
-mean_digit = mdo.get_mean_digits(training_lists)
-best_digit = mdo.get_best_digits(training_lists, test_lists)
-distance_sum = list()
-distance_average = list()
-sum_of_distances = float
-average_for_every_digit_median = list()
-average_for_every_digit_mean = list()
-average_for_every_digit_best = list()
+def get_evaluation(best_digit, training_lists, drawn_digit, label):
+    distance_btw_handwritten_and_meta = get_distance_from_handwritten_to_meta(drawn_digit.image, best_digit.image)
+    sorted_distances_from_meta = get_sorted_distances_from_testpool_to_meta(best_digit.image, training_lists, label)
+    evaluation = percentile_of_handwritten_digit(distance_btw_handwritten_and_meta, sorted_distances_from_meta)
+    return evaluation
 
-# calculating the average squared distances for median digit
-for i in range(10):
-    distances_for_sum = get_sorted_distances_from_testpool_to_meta(median_digit[i], training_lists, i)
-    sum_of_distances = sum(distances_for_sum)
-    # for j in range(len(distances_for_sum)-1):
-    #     sum_of_distances = sum_of_distances + distances_for_sum[j]
-    average_for_every_digit_median.append(sum_of_distances / len(distances_for_sum))
-print("average distances to the median digit")
-print(average_for_every_digit_median)
-
-# calculating the average squared distances for mean digit
-for i in range(10):
-    distances_for_sum = get_sorted_distances_from_testpool_to_meta(mean_digit[i], training_lists, i)
-    sum_of_distances = sum(distances_for_sum)
-    # for j in range(len(distances_for_sum)-1):
-    #     sum_of_distances = sum_of_distances + distances_for_sum[j]
-    average_for_every_digit_mean.append(sum_of_distances / len(distances_for_sum))
-print("average distances to the mean digit")
-print(average_for_every_digit_mean)
-
-# calculating the average squared distances for best digit
-for i in range(10):
-    distances_for_sum = get_sorted_distances_from_testpool_to_meta(best_digit[i].image, training_lists, i)
-    sum_of_distances = sum(distances_for_sum)
-    # for j in range(len(distances_for_sum)-1):
-    #     sum_of_distances = sum_of_distances + distances_for_sum[j]
-    average_for_every_digit_best.append(sum_of_distances / len(distances_for_sum))
-print("average distances to the best digit")
-print(average_for_every_digit_best)
-
-written_digit = getting_random_digit_from_test_pool(test_lists, 0)
-distance_btw_handwritten_and_meta = get_distance_from_handwritten_to_meta(written_digit.image, best_digit[0].image)
-sorted_distances_from_meta = get_sorted_distances_from_testpool_to_meta(best_digit[0].image, training_lists, 0)
-evaluation = percentile_of_handwritten_digit(distance_btw_handwritten_and_meta, sorted_distances_from_meta)
-print(evaluation)
+# written_digit = getting_random_digit_from_test_pool(test_lists, 0)
+# distance_btw_handwritten_and_meta = get_distance_from_handwritten_to_meta(written_digit.image, best_digit[0].image)
+# sorted_distances_from_meta = get_sorted_distances_from_testpool_to_meta(best_digit[0].image, training_lists, 0)
+# evaluation = percentile_of_handwritten_digit(distance_btw_handwritten_and_meta, sorted_distances_from_meta)
+# print(evaluation)

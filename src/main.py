@@ -9,6 +9,7 @@ import src.pickle_operations as pickle_io
 import src.image_operations as image_io
 import src.meta_digit_operations as meta_digit
 import src.digit_evaluation as digit_evaluation
+from src import evaluation_of_hand_written_digit as eval
 import numpy as np
 
 
@@ -36,6 +37,8 @@ if __name__ == '__main__':
     test_lists = pickle_io.load_pickles("../data/test.dat")
     print("Successfully loaded images from compressed pickle files")
 
+    best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
+
     # optionally save reference image for later inspection
     # image_operations.save('../fname.png', test_list[1].image)
 
@@ -61,6 +64,6 @@ if __name__ == '__main__':
     predicted_digit = knn.knn_digit_prediction(test, training_lists, k)
     print(predicted_digit)
 
-    best_digit = digit_evaluation.get_best_digits(training_lists, test_lists)
-    evaluation = -1
+    evaluation = eval.get_evaluation(best_digit[random_digit], training_lists, test, random_digit)
+    print(evaluation)
     digit_evaluation.show_difference(np.asarray(test.image), random_digit, np.asarray(best_digit[random_digit].image), evaluation)

@@ -7,9 +7,9 @@ from src import knn_sklearn_copy as knn_sklearn
 
 def get_best_digits(training_lists, test_lists):
 
-    # # get list of a list of all probabilities that a certain image displays a certain digit
-    all_predictions = (knn_sklearn.knn_sk_probabilities(test_lists, training_lists, 500))
-    pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
+    # # # get list of a list of all probabilities that a certain image displays a certain digit
+    # all_predictions = (knn_sklearn.knn_sk_probabilities(test_lists, training_lists, 500))
+    # pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
     # --- run code above once to create the .dat then only run line below ----
     all_predictions = pickle_io.load_pickles("../data/skknnproba.dat")
 
@@ -21,7 +21,7 @@ def get_best_digits(training_lists, test_lists):
 
 
 def show_difference(test_image, digit, best_digit, evaluation):
-    plt.figure().suptitle(f"Score: {evaluation}", fontsize="x-large")
+    plt.figure().suptitle(f"Score: {evaluation[0]}\n{evaluation[1]}", fontsize="x-large")
     plt.subplot(1, 2, 1)
     plt.imshow(test_image.reshape(28, 28),
                cmap=plt.cm.gray, interpolation='nearest',
