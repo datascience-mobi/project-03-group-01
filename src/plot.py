@@ -33,7 +33,7 @@ def k_accuracy_test(train_list, test_list, k_min, k_max):
 
 def pca_variance_analysis(input_list):
     # calculates the retained variance for different dimensions and plots the resulting variance-matrix
-    print("Started pca_variance_analysis")
+    # print("Started pca_variance_analysis")
     scale = preprocessing.StandardScaler()
     scale.fit(input_list)
     input_list = scale.transform(input_list)
