@@ -17,9 +17,9 @@ def get_sorted_distances_from_testpool_to_meta(meta_digit, training_list, meta_d
     # Scipy function calculating the euclidean distance between the test image and all training images
     distance_list = list()
     for training in training_list:
-        if training.label == meta_digit_label:
-            dist = distance.euclidean(training.image, meta_digit)
-            distance_list.insert(0, dist)
+        # if training.label == meta_digit_label:
+        dist = distance.euclidean(training.image, meta_digit)
+        distance_list.insert(0, dist)
 
     distance_list.sort()
 
@@ -53,11 +53,11 @@ def percentile_of_handwritten_digit(distance_between_handwritten_and_meta, sorte
             percent = round(((len(sorted_distances_from_meta) - i) / len(sorted_distances_from_meta) * 100), 3)
             break
     print("your written digit is closer to the most recognisable digit than", percent, "% of digits from our database")
-    if percent < 30:
+    if percent < 80:
         evaluation_feedback = "you could do better"
         # print("you could do better")
-    elif percent < 80:
-        evaluation_feedback = "is recognisable, you did fine"
+    elif percent < 90:
+        evaluation_feedback = "is recognizable, you did fine"
         # print("is recognisable, you did fine")
     else:
         evaluation_feedback = "really well-done (written)"
