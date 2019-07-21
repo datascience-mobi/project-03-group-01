@@ -7,6 +7,17 @@ from src import KNN_sklearn as knn_sklearn
 
 
 def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, reduced_images, scaler, original_dimensions):
+    """
+    Gets reduced images, recognizes them via KNN, reverse transforms and plots them
+    :param train_list: 784D training images fit to scaler
+    :param raw_training: non-reduced train images for plotting
+    :param test_list: 784D test images fit to scaler
+    :param reduced_train: dimensionally reduced train images for inverse transform
+    :param reduced_images: dimensionally reduced test images for inverse transform
+    :param scaler: object that was fit to the training images, required for proper inverse transform
+    :param original_dimensions: number of dimensions of reduced images
+    :return:
+    """
     images = list()
     for i in range(4):
         images.append(increase_dimensions(train_list, reduced_images, original_dimensions, scaler, i))
@@ -28,6 +39,13 @@ def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, r
 
 
 def plot_inverse_transforms(train_list, reduced_images, scaler):
+    """
+    Plots same image reduced to different number of dimensions
+    :param train_list: training images normalized by scaler object, required for the PCA object in inverse transform
+    :param reduced_images: test images after PCA to 784 dimensions
+    :param scaler: scaler object fit to the training images
+    :return: None
+    """
     # Invert pca for multiple values and draw the yielded images to one plot
     plt.figure(figsize=(10, 5))
     for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):

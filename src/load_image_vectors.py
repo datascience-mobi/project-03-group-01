@@ -21,13 +21,6 @@ def load_gz(path) -> list:
     # Create list, where each element is one image
     data_vector = data.split("\n")
 
-    # Make sure not to return empty or corrupted lines - optional
-    # count=0
-    # for dat in data_vector:
-    #     if not (len(dat.split(",")))==785:
-    #         print("FAIL"+str(count))
-    #     count+=1
-
     # Remove empty last element, was created since the input string ends with "\n"
     data_vector.pop(len(data_vector) - 1)
 
@@ -70,15 +63,6 @@ def get_image_object_list(data_list) -> list:
     return image_list
 
 
-def get_pixel_list(strings) -> list:
-    values = strings.split(",")
-    values.pop(0)
-    image = list()
-    for pixel in values:
-        image.append(int(pixel))
-    return image
-
-
 class CsvImage:
     """
     Contains the images label (which digit it represents) and its list of intensity values
@@ -102,8 +86,3 @@ class CsvImage:
         self.image = list()
         for pixel in values[1:]:
             self.image.append(int(pixel))
-
-        self.prediction = -1
-
-    def set_prediction(self, prediction):
-        self.prediction = prediction
