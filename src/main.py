@@ -51,8 +51,8 @@ if __name__ == '__main__':
     # performs pca_accuracy_test, then plots it
     # plot.pca_accuracy_test(test_lists, training_lists, 1)  # saves as pca_accuracy2 to avoid time wasted
     plot.plot_pca_accuracy(pickle_io.load_pickles("pca_accuracy.dat"))
-    meta_digit.show_mean_digits(training_lists)
-    meta_digit.show_median_digits(training_lists)
+    meta_digit.show_mean_digits(test_lists)
+    meta_digit.show_median_digits(test_lists)
     best_digits = np.asarray([csv_image.image for csv_image in meta_digit.get_best_digits(training_lists, test_lists)])
     meta_digit.show_best_digits(training_lists, test_lists, best_digits)
     knn_clustering.get_mispredictions(training_lists, test_lists)
