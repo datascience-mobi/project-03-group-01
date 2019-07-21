@@ -1,94 +1,97 @@
-import shutil, os
+from sklearn.decomposition import PCA
+from sklearn import preprocessing
+import src.image_operations as image_operations
+import numpy as np
+import matplotlib.pyplot as plt
+from src import KNN_sklearn as knn_sklearn
 
-def perform_pca(training_path):
-    """For normalization: Get vactor containing mean values for all pixels and training images"""
-    sumintensities=[]
-    meanintensities=[]
-    numimages=0
-    with open(training_path) as infile:
-        for line in infile:
-            image_vector=line.split(",")
-            sumintensities=[0]*len(image_vector)
-            meanintensities=[0]*len(image_vector)
-    truedigits=[]
-    """with open(training_path) as infile:
-        for line in infile:
-            image_vector=line.split(",")
-            truedigits.append(int(image_vector[0]))
-            image_vector.pop(0)
-            for i in range(len(image_vector)):
-                sumintensities[i]+=int(image_vector[i])
-            numimages+=1
-        for index in range(len(sumintensities)):
-            meanintensities[index]=int(round(float(sumintensities[index])/float(numimages)))
-        print(meanintensities)
-        print("Mean list created")
-    shutil.rmtree("../temp", ignore_errors=True)
-    os.mkdir("../temp")
-    f = open("../temp/normalized_training.csv", "w+")
-    with open(training_path) as infile:
-        linenumber=0
-        for line in infile:
-            f.write(str(truedigits[linenumber])+",")
-            linenumber+=1
-            old_vector=line.split(",")
-            for index in range(len(old_vector)):
-                f.write(str(int(old_vector[index])-meanintensities[index])+",")
-            f.write("\n")
-    f.close()
-    print("Normalizing completed")"""
 
-    """Create covariance matrix of our X*N Matrix where X=pixelnumber and N=image number
-        with the formula of Sigma(i,j)=1/numrows-1 * crossproduct (coli, colj)"""
-    covariance_matrix=[]
-    templist3=[]
-    f=open("../temp/covmatrix_training.csv", "w+")
-    for i in range(50,len(sumintensities)):
-        templist=collist(i, training_path)
-        for j in range(50,len(sumintensities)):
-            templist2=collist(j, training_path)
-            #print("Sizes: "+str(len(templist))+" and "+str(len(templist2)))
-            cov=covariance(len(sumintensities), templist, templist2)
-            templist3.append(cov)
-            print(cov)
-            print(str(i)+" x "+str(j))
-        #covariance_matrix.append(templist3)
-        print(templist3)
-        for t3 in templist3:
-            f.write(str(t3)+",")
-        f.write("\n")
-        print(templist3)
-    print("Covariance matrix finished!")
-    f.close()
+def plot_sample_reductions(train_list, raw_training, test_list, reduced_train, reduced_images, scaler, original_dimensions):
+    images = list()
+    for i in range(4):
+        images.append(increase_dimensions(train_list, reduced_images, original_dimensions, scaler, i))
+    pred = knn_sklearn.knn_sk(reduced_train, reduced_images, [csv_image.label for csv_image in raw_training], 3, 0, 4)
+    plt.figure(figsize=(5, 10))
+    for i in range(4):
+        plt.subplot(4, 2, 2 * i + 1)
+        plt.imshow(np.asarray(test_list[i].image).reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"Original image", fontsize=14)
+        plt.subplot(4, 2, 2 * i + 2)
+        plt.imshow(np.asarray(images[i]).reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"Reduced image \n prediction: {pred[i][1]}", fontsize=14)
+    plt.tight_layout()
+    plt.show()
 
-def collist(colnumber, path):
-    templist=[]
-    with open(path) as infile:
-        for line in infile:
-            linelist=line.split(",")
-            num=0
-            for l in range(len(linelist)):
-                if num == colnumber:
-                    templist.append(int(linelist[l]))
-                    break
-                num += 1
-    #print("Scale: "+str(len(templist))+"   "+str(colnumber))
-    return templist
 
-def covariance(n, list1, list2):
-    print("n: "+str(n))
-    factor1=1.0/float(n-1)
-    print(".......÷÷÷÷÷÷÷÷÷ "+str(factor1))
-    cov=factor1*cross_product(list1, list2)
-    print("-- "+str(cov))
-    return cov
+def plot_inverse_transforms(train_list, reduced_images, scaler):
+    # Invert pca for multiple values and draw the yielded images to one plot
+    plt.figure(figsize=(10, 5))
+    for idx, i in enumerate([10, 20, 40, 70, 100, 200, 400, 784]):
+        image = increase_dimensions(train_list, [red[:i] for red in reduced_images], i, scaler, 87)
+        plt.subplot(2, 4, idx+1)
+        plt.imshow(image.reshape(28, 28),
+                   cmap=plt.cm.gray, interpolation='nearest',
+                   clim=(0, 255))
+        plt.xlabel(f"n(dim) = {i}", fontsize=14)
+    plt.tight_layout()
+    plt.show()
 
-def cross_product(list1, list2):
-    if not len(list1) == len(list2):
-        print("Incompatible types: "+str(len(list1))+" and "+str(len(list2)))
-        return -1
-    product=0
-    for index in range(len(list1)):
-        product+=list1[index]*list2[index]
-    print("Product: "+str(product))
-    return product
+
+def increase_dimensions(train_list, reduced_images, original_dimensions, scaler, index):
+    """
+    Reconstructs visible 28×28 images from dimension reduced ones
+    :param train_list: preprocessed training images -> no scaler object necessary
+    :param reduced_images: dimension reduced images created by reduce_dimensions
+    :param original_dimensions: number of dimensions the images were reduced to
+    :return: numpy array of one reconstructed image
+    """
+    pca = PCA(n_components=original_dimensions)
+    pca.fit(train_list)
+    approximation = pca.inverse_transform(reduced_images)
+    approximation = scaler.inverse_transform(approximation)
+    new_image = approximation[index]
+    new_image = np.interp(new_image, (new_image.min(), new_image.max()), (0, 255))
+    # # For debug: min and max values after scaling
+    # print(min(new_image))
+    # print("--")
+    # print(max(new_image))
+
+    # # Draw scaled image
+    # new_image.tolist()
+    # new_image = [round(x) for x in new_image]
+    # image_operations.draw(new_image)
+
+    return np.around(new_image)
+
+  
+def reduce_dimensions(train_list, test_list, target_dimensions) -> tuple:
+    """
+    Performs pca
+    :param train_list: train list
+    :param test_list: test list
+    :param target_dimensions: number of dimensions to reduce to
+    :return: reduced input lists as tuple
+    """
+
+    scaler = preprocessing.StandardScaler()
+
+    # Fit on training set only.
+    scaler.fit(train_list)
+
+    # Apply transform to both the training set and the test set.
+    train_list = scaler.transform(train_list)
+    test_list = scaler.transform(test_list)
+
+    # Create instance of pca and fit it only to the training images
+    pca = PCA(n_components=target_dimensions)
+    pca.fit(train_list)
+
+    # Apply pca to both image lists
+    train_pca = pca.transform(train_list)
+    test_pca = pca.transform(test_list)
+
+    return train_pca, test_pca, train_list, scaler

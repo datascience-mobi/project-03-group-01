@@ -1,107 +1,67 @@
-distancevector=[]
-testvector=[]
-testvectordigit=-1 # true test image digit
-numsuccess=0
-totaltries=0 # number of analyzed test images
-k=0
+def get_sorted_distances(test_image, training_list) -> list:
+    """
+    Calculates list containing the distance of each training vector to a certain test vector
+    :param test_image: One CsvImage object containing the test image
+    :param training_list: list of all CsvImage objects of the training images
+    :return: sorted list of distances + corresponding label between the test image and each training image
+    """
 
-# call the relevant functions for performing KNN
-def perform_knn(kvalue, testpath, testnumber, trainingpath):
-    # set k as global variable
-    set_k(kvalue)
-    # assign intensity values from test image to global variable
-    get_test_vector(testpath, testnumber)
-    # loop through all training images to perform KNN
-    get_training_vectors(trainingpath)
+    distance_list = list()
 
-# after performing KNN for one test image reset the global variables
-def reset_global_vars():
-    global distancevector, testvector, testvectordigit, k
-    distancevector = []
-    testvector = []
-    testvectordigit = -1
-    k = 0
+    # Append squared distance between test vector and each training vector to distance_list
+    for training_image in training_list:
+        distance = 0
+        # print(training_image.image == test_image.image)
 
-# loop through training vectors to create an array containing distance and digit for each training image
-def get_training_vectors(path):
-    global distancevector, k
-    distancevector.append([]) # TODO: maybe useless?
+        # Add squared distance for each dimension to distance
+        for i in range(len(training_image.image)):
+            difference = test_image.image[i]-training_image.image[i]
+            square_distance = difference * difference
+            distance += square_distance
+        distance_list.append([distance, training_image.label])
 
-    with open(path) as infile:
-        for line in infile:
-            trainvector=line.split(",") # fill trainvector with intensity values from one line/image, see csv structure
-            distance=get_distance(trainvector,testvector) # distance between test vector and current training vector
-            if not distance == -1:
-                distancevector.append([distance,int(trainvector[0])])
-            else:
-                return(-1) # check for errors in get_distance function
-        sorteddistancevector=distancevector # new array to keep unsorted one, maybe redundant
-        sorteddistancevector.pop(0) # remove first element (label)
-        sorteddistancevector.sort() # ascending order -> first k elements have lowest distance
-        # create array of nearest digits
-        results=[]
+    # Test if list is sorted
+    # print("Distance vector length: " + str(len(distance_list)))
+    # for i in range(5):
+    #     print(distance_list[i])
+
+    # Sort list in ascending order
+    distance_list.sort()
+
+    # Test if list now is sorted
+    # for i in range(5):
+    #     print(distance_list[i])
+
+    return distance_list
+
+
+def knn_digit_prediction(test_image, training_list, k) -> int:
+    """
+    Calculates most frequent out of k lowest distances
+    :param test_image: One CsvImage object containing the test image
+    :param training_list: list of all CsvImage objects of the training images
+    :param k: value for k (k-nearest neighbors)
+    :return: predicted / recognized digit
+    """
+
+    distances = get_sorted_distances(test_image, training_list)
+    # Contains distance+label between test image and each training image
+    print("Successfully calculated distance of one test image to all training images")
+
+    # Create list only containing labels of k closest training vectors, not distances
+    digits = list()
+    if k <= len(distances):
         for i in range(k):
-            #print(distancevector[i]) # used for debugging
-            #print(len(distancevector[i])) # used for debugging
-            results.append(distancevector[i][1]) # append second element of distancevector: digit of original vector
+            digits.append(distances[i][1])
+    print(digits)
 
-        process_results(results)
-
-        reset_global_vars()
-
-# find most frequent nearest neighbors and get success rate e.g. for plotting it against k
-def process_results(results):
-    global numsuccess, totaltries, testvectordigit
-    print("True Result= " + str(testvectordigit))
-    nummaxmatches = 0  # TODO: figure out variable naming convention
-    digitmaxmatches = results[0]
-    for i in results:
-        freq = results.count(i)
-        if freq > nummaxmatches:
-            nummaxmatches = freq
-            digitmaxmatches = i
-    print("Result= " + str(digitmaxmatches) + " with counts: " + str(nummaxmatches))
-    totaltries+=1
-    print("Expected result: "+str(testvectordigit)+" - result: "+str(digitmaxmatches)+" - matching? "+str(digitmaxmatches==testvectordigit))
-    if digitmaxmatches==testvectordigit:
-        numsuccess+=1
-        print("SUCCESS")
-    if not totaltries==0:
-        successrate=float(numsuccess)/float(totaltries)*float(100)
-    else:
-        successrate=0
-    print("Current success rate: "+str(successrate)+"%")
-
-
-# set value for k variable
-def set_k(kvalue):
-    global k
-    k=kvalue
-
-# calculates euclidian distance between two vectors (test image and one training image)
-def get_distance(vector1, vector2):
-    if not len(vector1) == len(vector2): # check if vectors have same dimensionality
-        print("ERROR, incompatible image sizes: "+str(len(vector1))+" and "+str(len(vector2)))
-        return(-1) # abort, provide information for further analysis
-    sum=0
-    first=True # TODO: remove first element (label) in the beginning without skipping here
-    for i in range(len(vector1)): # for each element calculate squared distance
-        a=int(vector1[i])-int(vector2[i])
-        if not first==True:
-            sum+=a*a
-        first=False
-    return(sum)
-
-# linenumber for a specific test image was passed as parameter -> find and process it
-def get_test_vector(path, linenumber):
-    global testvector, testvectordigit
-    with open(path) as infile:
-        number=0 # manual counter for finding the line, maybe obsolete
-        for line in infile:
-            number+=1
-            if number == linenumber:
-                testvector = line.split(",") # elements between each , are one element of testvector
-                #testvector[len(testvector)-1]=testvector[len(testvector)-1].strip() # probably redundant
-                testvectordigit=int(testvector[0])
-                #print(testvector) # lines are strings TODO: convert to string and remove \n from last element
-                return # break out of the loop once the line is found and processed
+    # Get most frequent training image label in digits list
+    num_max_matches = 0
+    digit_max_matches = -1  # Set to -1 to easily detect errors
+    for i in range(10):
+        freq = digits.count(i)  # count of digit 0-9 in digits vector
+        if freq > num_max_matches:
+            num_max_matches = freq  # replace num_max_matches if a more frequent nearest neighbor was found
+            digit_max_matches = i
+    # print("Prediction:" + str(digit_max_matches))
+    return digit_max_matches
