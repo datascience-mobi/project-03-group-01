@@ -22,8 +22,10 @@ def get_mispredictions(train_list, test_list):
     for pred in predictions:
         if not pred[1] == test_list[pred[0]].label:
             table[pred[1]][test_list[pred[0]].label] += 1
-    # Transforms
+    # Transforms to numpy array because it's required for plotting as heatmap
     table = np.asarray(table)
+
+    # Plots the heatmap
     im = plt.imshow(table.reshape(10, 10), cmap='hot', interpolation='nearest')
     plt.xlabel("Correct label")
     plt.ylabel("False recognition")
