@@ -1,29 +1,32 @@
 import sklearn
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import neighbors, metrics
-from src import load_image_vectors
 import matplotlib.pyplot as plt
 import numpy as np
-import src.pickle_operations as pickle_io
 from src import pca
 from src import KNN_sklearn
 
 
 def show_wrong_predicted(train_images, test_images, best_digits):
     """
-    compares labels of test images with test prediction. if there is a difference the wrong predicted digit is plotted
-    :param test_predictions: number
-    :param test_images: list from test images
+    Plots 5 falsely recognized 7's next to the optimal 7 and the optimal
+    :param train_images: training images
+    :param test_images: list of test images
+    :param best_digits: Most uniquely recognized images (meta digits)
     :return: None
     """
-    reds = pca.reduce_dimensions([csv_image.image for csv_image in train_images], [csv_image.image for csv_image in test_images], 78)
+    # Runs PCA
+    reduced_images = pca.reduce_dimensions([csv_image.image for csv_image in train_images], [csv_image.image for csv_image in test_images], 78)
 
-    test_predictions = KNN_sklearn.knn_sk(reds[0], reds[1], [csv_image.label for csv_image in train_images], 3, 0, 10000)
+    # Runs KNN for all test images
+    test_predictions = KNN_sklearn.knn_sk(reduced_images[0], reduced_images[1], [csv_image.label for csv_image in train_images], 3, 0, 10000)
+
+    # number of false recognized images already plotted
     count = 0
+
     plt.figure(figsize=(5, 10))
     for i in range(len(test_predictions)):
         if test_images[test_predictions[i][0]].label != test_predictions[i][1] and test_images[test_predictions[i][0]].label == 7:
-            # image_operations.draw(test_images[test_predictions[i][0]].image)
             plt.subplot(5, 3, 3 * count + 1)
             plt.imshow(np.asarray(best_digits[test_images[test_predictions[i][0]].label].reshape(28, 28)),
                        cmap=plt.cm.gray, interpolation='nearest',
@@ -47,6 +50,13 @@ def show_wrong_predicted(train_images, test_images, best_digits):
 
 
 def plot_sample_recognitions(training_lists, test_lists, k):
+    """
+    Plots first 10 test images + their prediction
+    :param training_lists: training images
+    :param test_lists: test images
+    :param k: for which k to run the PCA
+    :return: None
+    """
     pred = knn_sk([csv_image.image for csv_image in training_lists], [csv_image.image for csv_image in test_lists], [csv_image.label for csv_image in training_lists], k, 0, 10)
     plt.figure(figsize=(10, 5))
     for i in range(10):
@@ -64,6 +74,7 @@ def knn_sk(train_images, test_images, train_labels, n_neighbours, min_index, max
     performs the sklearn knn implementation from test image number min_index up to max_index -1
     :param test_images: list of test images as CsvImages
     :param train_images:  list of training images as CsvImages
+    :param train_labels: list of labels of train images
     :param n_neighbours: number of neighbors for KNN
     :param min_index: lowest test image number to perform the knn for
     :param max_index: lowest test image number NOT to perform the knn for
@@ -104,9 +115,7 @@ def knn_sk_probabilities(test_images, train_images, n_neighbours):
     # create a list of probabilities for each digit and the corresponding images
     test_predictions = list()
     for i in range(10):
-        print(f"inside knn: {i}")
         test_prediction = knn.predict_proba([csv_image.image for csv_image in test_images if csv_image.label == i]).tolist()
-        print(test_prediction)
         # assigns the corresponding label to each prediction
         test_prediction = [list(a) for a in zip([j for j in range(len(test_images))], test_prediction)]
         print(test_prediction)
@@ -155,27 +164,3 @@ def get_most_unique_image(predictions, label, test_images) -> int:
     best_index = get_total_index(test_images, label, max_label)
 
     return best_index
-
-
-# if __name__ == '__main__':
-#     training_lists = pickle_io.load_pickles('../data/training.dat')
-#     print("Successfully loaded training list")
-#     test_lists = pickle_io.load_pickles('../data/test.dat')
-#     print("Successfully loaded test list")
-#
-#     # get list of a list of all probabilities that a certain image displays a certain digit
-#     all_predictions = (knn_sk_probabilities(test_lists, training_lists, 500))
-#     pickle_io.save_pickles(all_predictions, "../data/skknnproba.dat")
-#     # --- run code above once to create the .dat then only run line below ----
-#     # all_predictions = pickle_io.load_pickles("../data/skknnproba.dat")
-#
-#     # get labels of most clearly recognized images for each digit
-#     best_images = list()
-#     for i in range(10):
-#         print(f"i: {i}")
-#         best_images.append(get_most_unique_image(all_predictions[i], i, test_lists))
-#     print(f"Best images: {best_images}")
-#     # save calculated labels for the best / most clearly recognized test images in a txt file
-#     with open('best_digits.txt', 'w') as the_file:
-#         for index in best_images:
-#             the_file.write(f"{index}\n")
