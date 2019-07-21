@@ -92,10 +92,10 @@ def pca_accuracy_test(test_lists, training_lists, steps):
 # knn.reset_rates()
 # plot.plot_k_values(k_accuracy)
 
-
-def save_results():
-    plt.savefig("accuracy_test.png")  # save the figure to file as png
-    plt.savefig("accuracy_test.pdf")  # save the figure to file as pdf
+#
+# def save_results():
+#     plt.savefig("accuracy_test.png")  # save the figure to file as png
+#     plt.savefig("accuracy_test.pdf")  # save the figure to file as pdf
 
 
 def plot_pca_accuracy(input_list):
